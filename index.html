@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中台支撑资源库</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+
+<!-- 顶部导航栏 -->
+<header class="top-header">
+  <div class="header-left">
+    <div class="logo">
+      <i class="fas fa-database"></i>
+      <span>中台支撑资源库</span>
+    </div>
+  </div>
+  <div class="header-center">
+    <div class="global-search">
+      <i class="fas fa-search"></i>
+      <input type="text" id="globalSearch" placeholder="搜索资源名称、关键词..." autocomplete="off">
+      <kbd>Ctrl+K</kbd>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="btn-upload-header" id="btnUploadHeader">
+      <i class="fas fa-cloud-upload-alt"></i> 上传资源
+    </button>
+    <div class="notification" id="notificationBtn">
+      <i class="fas fa-bell"></i>
+      <span class="badge" id="notifBadge">0</span>
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-dropdown-header">
+          <span>通知消息</span>
+          <button class="notif-clear-btn" id="notifClearBtn">全部已读</button>
+        </div>
+        <div class="notif-dropdown-body" id="notifBody">
+          <div class="notif-empty">暂无新通知</div>
+        </div>
+      </div>
+    </div>
+    <div class="user-avatar">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%234A90D9'/%3E%3Ctext x='20' y='25' text-anchor='middle' fill='white' font-size='16'%3E管%3C/text%3E%3C/svg%3E" alt="用户">
+      <span>管理员</span>
+    </div>
+  </div>
+</header>
+
+<div class="main-container">
+  <!-- 左侧导航栏 -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h3><i class="fas fa-folder-tree"></i> 产品资料</h3>
+    </div>
+    <nav class="sidebar-nav">
+      <ul class="nav-tree">
+        <!-- 硬件分类 -->
+        <li class="nav-item has-children">
+          <div class="nav-link" data-category="hardware">
+            <i class="fas fa-chevron-right toggle-icon"></i>
+            <i class="fas fa-microchip cat-icon"></i>
+            <span>硬件产品</span>
+            <span class="count-badge">0</span>
+          </div>
+          <ul class="sub-nav">
+            <li class="nav-item">
+              <div class="nav-link" data-product="camera">
+                <i class="fas fa-video cat-icon sub-icon"></i>
+                <span>智能摄像机系列</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="nav-link" data-product="nvr">
+                <i class="fas fa-server cat-icon sub-icon"></i>
+                <span>网络硬盘录像机</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="nav-link" data-product="access">
+                <i class="fas fa-door-open cat-icon sub-icon"></i>
+                <span>门禁控制设备</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="nav-link" data-product="alarm">
+                <i class="fas fa-bell cat-icon sub-icon"></i>
+                <span>报警探测设备</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <!-- 软件分类 -->
+        <li class="nav-item has-children expanded">
+          <div class="nav-link active" data-category="software">
+            <i class="fas fa-chevron-right toggle-icon"></i>
+            <i class="fas fa-cube cat-icon"></i>
+            <span>软件平台</span>
+            <span class="count-badge">0</span>
+          </div>
+          <ul class="sub-nav" style="display:block;">
+            <li class="nav-item">
+              <div class="nav-link active" data-product="isecure">
+                <i class="fas fa-shield-halved cat-icon sub-icon"></i>
+                <span>iSecure Center 综合安防管理平台</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="nav-link" data-product="infovision">
+                <i class="fas fa-map-location-dot cat-icon sub-icon"></i>
+                <span>Infovision AR 实景地图平台</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="nav-link" data-product="education">
+                <i class="fas fa-graduation-cap cat-icon sub-icon"></i>
+                <span>教育综合安防管理平台</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="nav-link" data-product="finance">
+                <i class="fas fa-building-columns cat-icon sub-icon"></i>
+                <span>金融综合安防管理平台</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="nav-link" data-product="traffic">
+                <i class="fas fa-road cat-icon sub-icon"></i>
+                <span>交通综合管控平台</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <!-- 解决方案 -->
+        <li class="nav-item has-children">
+          <div class="nav-link" data-category="solution">
+            <i class="fas fa-chevron-right toggle-icon"></i>
+            <i class="fas fa-lightbulb cat-icon"></i>
+            <span>解决方案</span>
+            <span class="count-badge">0</span>
+          </div>
+          <ul class="sub-nav">
+            <li class="nav-item">
+              <div class="nav-link" data-product="smart-city">
+                <i class="fas fa-city cat-icon sub-icon"></i>
+                <span>智慧城市方案</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="nav-link" data-product="smart-park">
+                <i class="fas fa-tree-city cat-icon sub-icon"></i>
+                <span>智慧园区方案</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="nav-link" data-product="smart-retail">
+                <i class="fas fa-store cat-icon sub-icon"></i>
+                <span>智慧零售方案</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <!-- 培训资料 -->
+        <li class="nav-item has-children">
+          <div class="nav-link" data-category="training">
+            <i class="fas fa-chevron-right toggle-icon"></i>
+            <i class="fas fa-chalkboard-user cat-icon"></i>
+            <span>培训资料</span>
+            <span class="count-badge">0</span>
+          </div>
+          <ul class="sub-nav">
+            <li class="nav-item">
+              <div class="nav-link" data-product="tech-training">
+                <i class="fas fa-wrench cat-icon sub-icon"></i>
+                <span>技术培训</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="nav-link" data-product="sales-training">
+                <i class="fas fa-handshake cat-icon sub-icon"></i>
+                <span>销售培训</span>
+                <span class="count-badge">0</span>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-collapse-sidebar" id="btnCollapse">
+        <i class="fas fa-angles-left"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="content-area">
+    <!-- 面包屑 -->
+    <div class="breadcrumb">
+      <span><i class="fas fa-home"></i> 首页</span>
+      <i class="fas fa-chevron-right"></i>
+      <span>软件平台</span>
+      <i class="fas fa-chevron-right"></i>
+      <span class="current">iSecure Center 综合安防管理平台</span>
+    </div>
+
+    <!-- 顶部标签栏 -->
+    <div class="tab-bar">
+      <div class="tab active" data-tab="all">
+        <i class="fas fa-th-large"></i> 全部
+      </div>
+      <div class="tab" data-tab="marketing">
+        <i class="fas fa-bullhorn"></i> 营销推广书架
+      </div>
+      <div class="tab" data-tab="project">
+        <i class="fas fa-project-diagram"></i> 项目支持书架
+      </div>
+      <div class="tab" data-tab="delivery">
+        <i class="fas fa-truck"></i> 交付支持书架
+      </div>
+      <div class="tab" data-tab="cases">
+        <i class="fas fa-star"></i> 案例分享书架
+      </div>
+      <div class="tab-indicator" id="tabIndicator"></div>
+    </div>
+
+    <!-- Banner 轮播区 -->
+    <div class="banner-section">
+      <div class="banner-carousel" id="bannerCarousel">
+        <div class="banner-track" id="bannerTrack">
+          <!-- 由JS动态生成 -->
+        </div>
+        <button class="banner-arrow banner-prev" id="bannerPrev"><i class="fas fa-chevron-left"></i></button>
+        <button class="banner-arrow banner-next" id="bannerNext"><i class="fas fa-chevron-right"></i></button>
+        <div class="banner-dots" id="bannerDots"></div>
+      </div>
+      <div class="banner-recent" id="bannerRecent">
+        <div class="recent-header">
+          <i class="fas fa-clock"></i> 最新上传
+        </div>
+        <div class="recent-list" id="recentList">
+          <div class="recent-empty">暂无上传记录</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 筛选面板 + 内容区 -->
+    <div class="content-body">
+      <!-- 筛选面板 -->
+      <div class="filter-panel" id="filterPanel">
+        <div class="filter-section">
+          <div class="filter-title">
+            <i class="fas fa-tags"></i> 类别
+            <button class="btn-clear-filter" id="btnClearCategory">清空</button>
+          </div>
+          <div class="filter-options">
+            <label class="filter-checkbox">
+              <input type="checkbox" value="product-detail"> 
+              <span class="checkmark"></span>
+              <span class="label-text">商品详情页</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="product-spec"> 
+              <span class="checkmark"></span>
+              <span class="label-text">产品SPEC(彩页)</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="product-plan"> 
+              <span class="checkmark"></span>
+              <span class="label-text">产品方案</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="install-guide"> 
+              <span class="checkmark"></span>
+              <span class="label-text">安装指南</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="user-manual"> 
+              <span class="checkmark"></span>
+              <span class="label-text">用户手册</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="config-guide"> 
+              <span class="checkmark"></span>
+              <span class="label-text">配置指南</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="release-note"> 
+              <span class="checkmark"></span>
+              <span class="label-text">版本说明</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="api-doc"> 
+              <span class="checkmark"></span>
+              <span class="label-text">API文档</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="white-paper"> 
+              <span class="checkmark"></span>
+              <span class="label-text">白皮书</span>
+            </label>
+          </div>
+        </div>
+        <div class="filter-section">
+          <div class="filter-title">
+            <i class="fas fa-file-lines"></i> 格式
+            <button class="btn-clear-filter" id="btnClearFormat">清空</button>
+          </div>
+          <div class="filter-options">
+            <label class="filter-checkbox">
+              <input type="checkbox" value="pdf"> 
+              <span class="checkmark"></span>
+              <span class="label-text"><i class="fas fa-file-pdf format-icon pdf"></i> PDF</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="word"> 
+              <span class="checkmark"></span>
+              <span class="label-text"><i class="fas fa-file-word format-icon word"></i> Word</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="excel"> 
+              <span class="checkmark"></span>
+              <span class="label-text"><i class="fas fa-file-excel format-icon excel"></i> Excel</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="ppt"> 
+              <span class="checkmark"></span>
+              <span class="label-text"><i class="fas fa-file-powerpoint format-icon ppt"></i> PPT</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="video"> 
+              <span class="checkmark"></span>
+              <span class="label-text"><i class="fas fa-file-video format-icon video"></i> 视频</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="image"> 
+              <span class="checkmark"></span>
+              <span class="label-text"><i class="fas fa-file-image format-icon image"></i> 图片</span>
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" value="zip"> 
+              <span class="checkmark"></span>
+              <span class="label-text"><i class="fas fa-file-zipper format-icon zip"></i> 压缩包</span>
+            </label>
+          </div>
+        </div>
+        <button class="btn-clear-all" id="btnClearAll">
+          <i class="fas fa-rotate-left"></i> 清空所有筛选
+        </button>
+      </div>
+
+      <!-- 资源列表区 -->
+      <div class="resource-list-area">
+        <!-- 工具栏 -->
+        <div class="list-toolbar">
+          <div class="result-info">
+            筛选出 <strong id="resultCount">0</strong> 条结果
+          </div>
+          <div class="toolbar-actions">
+            <div class="sort-dropdown">
+              <button class="btn-sort" id="btnSort">
+                <i class="fas fa-arrow-down-wide-short"></i> 最新上传
+                <i class="fas fa-chevron-down"></i>
+              </button>
+              <div class="sort-menu" id="sortMenu">
+                <div class="sort-option active" data-sort="newest">最新上传</div>
+                <div class="sort-option" data-sort="oldest">最早上传</div>
+                <div class="sort-option" data-sort="name">按名称排序</div>
+                <div class="sort-option" data-sort="size">按大小排序</div>
+                <div class="sort-option" data-sort="downloads">按下载量排序</div>
+              </div>
+            </div>
+            <div class="view-toggle">
+              <button class="btn-view active" data-view="list" title="列表视图">
+                <i class="fas fa-list"></i>
+              </button>
+              <button class="btn-view" data-view="grid" title="网格视图">
+                <i class="fas fa-grip"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 资源卡片列表 -->
+        <div class="resource-list" id="resourceList">
+          <!-- 资源卡片由JS动态生成 -->
+        </div>
+
+        <!-- 加载更多 / 分页 -->
+        <div class="pagination-area">
+          <button class="btn-load-more" id="btnLoadMore">
+            <i class="fas fa-arrow-rotate-right"></i> 加载更多
+          </button>
+          <div class="page-info">
+            显示 0 / 共 0 条
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- 上传弹窗 -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-cloud-upload-alt"></i> 上传资源</h3>
+      <button class="btn-close-modal" id="btnCloseModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">
+          <i class="fas fa-cloud-arrow-up"></i>
+        </div>
+        <p class="upload-text">拖拽文件到此处，或 <span class="upload-link">点击选择文件</span></p>
+        <p class="upload-hint">支持 PDF、Word、Excel、PPT、视频、图片、压缩包，单文件不超过 500MB</p>
+        <input type="file" id="fileInput" multiple hidden accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.mp4,.avi,.mov,.jpg,.jpeg,.png,.gif,.zip,.rar,.7z">
+      </div>
+      <div class="upload-file-list" id="uploadFileList"></div>
+      <div class="upload-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>资源名称 <span class="required">*</span></label>
+            <input type="text" id="resourceName" placeholder="请输入资源名称">
+          </div>
+          <div class="form-group">
+            <label>所属产品 <span class="required">*</span></label>
+            <select id="resourceProduct">
+              <option value="">请选择产品</option>
+              <optgroup label="硬件产品">
+                <option value="camera">智能摄像机系列</option>
+                <option value="nvr">网络硬盘录像机</option>
+                <option value="access">门禁控制设备</option>
+                <option value="alarm">报警探测设备</option>
+              </optgroup>
+              <optgroup label="软件平台">
+                <option value="isecure" selected>iSecure Center 综合安防管理平台</option>
+                <option value="infovision">Infovision AR 实景地图平台</option>
+                <option value="education">教育综合安防管理平台</option>
+                <option value="finance">金融综合安防管理平台</option>
+                <option value="traffic">交通综合管控平台</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>资源类别 <span class="required">*</span></label>
+            <select id="resourceCategory">
+              <option value="">请选择类别</option>
+              <option value="product-detail">商品详情页</option>
+              <option value="product-spec">产品SPEC(彩页)</option>
+              <option value="product-plan">产品方案</option>
+              <option value="install-guide">安装指南</option>
+              <option value="user-manual">用户手册</option>
+              <option value="config-guide">配置指南</option>
+              <option value="release-note">版本说明</option>
+              <option value="api-doc">API文档</option>
+              <option value="white-paper">白皮书</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>书架归属 <span class="required">*</span></label>
+            <select id="resourceShelf">
+              <option value="">请选择书架</option>
+              <option value="marketing">营销推广书架</option>
+              <option value="project">项目支持书架</option>
+              <option value="delivery">交付支持书架</option>
+              <option value="cases">案例分享书架</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>适用版本</label>
+            <input type="text" id="resourceVersion" placeholder="如 V2.0.0">
+          </div>
+          <div class="form-group">
+            <label>上传地址</label>
+            <input type="text" id="uploadPath" value="/resources/software/isecure/" readonly>
+            <span class="form-hint">资源将存储到此路径</span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label>资源描述</label>
+            <textarea id="resourceDesc" rows="3" placeholder="请输入资源描述信息..."></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label>标签</label>
+            <div class="tag-input-area">
+              <div class="tags-container" id="tagsContainer"></div>
+              <input type="text" id="tagInput" placeholder="输入标签后按回车添加">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="btnCancelUpload">取消</button>
+      <button class="btn-primary" id="btnConfirmUpload">
+        <i class="fas fa-upload"></i> 确认上传
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 资源详情弹窗 -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal modal-detail">
+    <div class="modal-header">
+      <h3 id="detailTitle"><i class="fas fa-file"></i> 资源详情</h3>
+      <button class="btn-close-modal" id="btnCloseDetail">&times;</button>
+    </div>
+    <div class="modal-body" id="detailBody">
+      <!-- 动态填充 -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="btnCloseDetail2">关闭</button>
+      <button class="btn-primary" id="btnDownloadDetail">
+        <i class="fas fa-download"></i> 下载资源
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast 通知 -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
