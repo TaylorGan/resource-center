@@ -507,10 +507,22 @@ body {
   align-items: center;
   gap: 14px;
   transition: var(--transition);
-  cursor: default;
+  cursor: pointer;
+  position: relative;
 }
 
-.qs-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.qs-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--primary-light); }
+
+.qs-card:active { transform: translateY(0); }
+
+.qs-arrow {
+  font-size: 11px;
+  color: var(--text-light);
+  transition: var(--transition);
+  margin-left: auto;
+}
+
+.qs-card:hover .qs-arrow { color: var(--primary); transform: translateX(3px); }
 
 .qs-icon {
   width: 42px; height: 42px;

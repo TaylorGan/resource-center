@@ -185,6 +185,86 @@ function renderBanner() {
 }
 
 // ==========================================
+// 快捷统计卡片点击跳转
+// ==========================================
+function qsNavigate(type) {
+  // 先重置所有筛选
+  state.selectedProduct = '';
+  state.selectedCategories = [];
+  state.selectedFormats = [];
+  state.searchQuery = '';
+  $('#globalSearch').value = '';
+  $('#navTree')?.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  $('#filterCategories')?.querySelectorAll('input').forEach(cb => cb.checked = false);
+  $('#filterFormats')?.querySelectorAll('input').forEach(cb => cb.checked = false);
+
+  switch(type) {
+    case 'all':
+      // 跳转到"全部资源"标签页
+      state.currentTab = 'all';
+      state.currentSort = 'newest';
+      activateTab('all');
+      showToast('info', '已切换到全部资源');
+      break;
+
+    case 'downloads':
+      // 跳转到"全部资源"并按下载量排序
+      state.currentTab = 'all';
+      state.currentSort = 'downloads';
+      activateTab('all');
+      $('#sortSelect').value = 'downloads';
+      showToast('info', '已按下载量排序');
+      break;
+
+    case 'categories':
+      // 展开筛选面板的类别区域，高亮提示
+      state.currentTab = 'all';
+      activateTab('all');
+      // 闪烁类别筛选区域
+      const catSection = $('#filterCategories')?.closest('.filter-section');
+      if (catSection) {
+        catSection.style.transition = 'all 0.3s ease';
+        catSection.style.boxShadow = '0 0 0 2px var(--primary-light)';
+        catSection.style.background = 'var(--primary-bg)';
+        setTimeout(() => {
+          catSection.style.boxShadow = '';
+          catSection.style.background = '';
+        }, 2000);
+      }
+      showToast('info', '请在左侧类别筛选中选择');
+      break;
+
+    case 'recent':
+      // 跳转到"全部资源"，按最新排序，并只显示近7日
+      state.currentTab = 'all';
+      state.currentSort = 'newest';
+      activateTab('all');
+      $('#sortSelect').value = 'newest';
+      // 设置搜索为近7日的日期范围标记
+      const week = new Date();
+      week.setDate(week.getDate() - 7);
+      state._recentFilter = week.toISOString().slice(0,10);
+      renderResources();
+      showToast('info', '已筛选近7日上传的资源');
+      // 3秒后自动清除近7日筛选
+      setTimeout(() => { delete state._recentFilter; }, 300);
+      return; // 已经调用了renderResources，直接返回
+  }
+
+  renderResources();
+}
+
+// 激活指定书架标签
+function activateTab(tabId) {
+  const bar = $('#tabsBar');
+  if (!bar) return;
+  bar.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === tabId);
+  });
+  state.currentTab = tabId;
+}
+
+// ==========================================
 // 快捷统计
 // ==========================================
 function updateQuickStats() {
@@ -207,6 +287,8 @@ function renderResources() {
   if(state.selectedCategories.length>0) filtered=filtered.filter(r=>state.selectedCategories.includes(r.category));
   if(state.selectedFormats.length>0) filtered=filtered.filter(r=>state.selectedFormats.includes(r.format));
   if(state.searchQuery){const q=state.searchQuery.toLowerCase();filtered=filtered.filter(r=>r.title.toLowerCase().includes(q)||(r.description||'').toLowerCase().includes(q)||(r.tags||[]).some(t=>t.toLowerCase().includes(q)));}
+  // 近7日筛选（由快捷卡片触发）
+  if(state._recentFilter){filtered=filtered.filter(r=>r.date>=state._recentFilter);}
   if(state.currentSort==='newest') filtered.sort((a,b)=>b.date.localeCompare(a.date));
   else if(state.currentSort==='downloads') filtered.sort((a,b)=>b.downloads-a.downloads);
   else if(state.currentSort==='name') filtered.sort((a,b)=>a.title.localeCompare(b.title));
