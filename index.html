@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>中台支撑资源库</title>
+<title>捷顺科技 · 中台支撑资源库</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
@@ -12,22 +12,31 @@
 <!-- 顶部导航栏 -->
 <header class="top-header">
   <div class="header-left">
-    <div class="logo">
-      <i class="fas fa-database"></i>
-      <span>中台支撑资源库</span>
-    </div>
+    <a class="logo" href="index.html">
+      <svg class="logo-icon" viewBox="0 0 36 36" width="32" height="32">
+        <polygon points="4,28 18,4 18,20" fill="#003399"/>
+        <polygon points="14,28 22,12 22,28" fill="#E63926"/>
+        <polygon points="20,28 32,8 32,28" fill="#00A0E9"/>
+      </svg>
+      <div class="logo-text">
+        <span class="logo-main">捷顺科技</span>
+        <span class="logo-sub">中台支撑资源库</span>
+      </div>
+    </a>
   </div>
   <div class="header-center">
     <div class="global-search">
       <i class="fas fa-search"></i>
-      <input type="text" id="globalSearch" placeholder="搜索资源名称、关键词..." autocomplete="off">
-      <kbd>Ctrl+K</kbd>
+      <input type="text" id="globalSearch" placeholder="搜索资源名称、关键词、标签..." autocomplete="off">
+      <kbd>⌘K</kbd>
     </div>
   </div>
   <div class="header-right">
     <button class="btn-upload-header" id="btnUploadHeader">
-      <i class="fas fa-cloud-upload-alt"></i> 上传资源
+      <i class="fas fa-cloud-upload-alt"></i>
+      <span>上传资源</span>
     </button>
+    <div class="header-divider"></div>
     <div class="notification" id="notificationBtn">
       <i class="fas fa-bell"></i>
       <span class="badge" id="notifBadge">0</span>
@@ -37,7 +46,7 @@
           <button class="notif-clear-btn" id="notifClearBtn">全部已读</button>
         </div>
         <div class="notif-dropdown-body" id="notifBody">
-          <div class="notif-empty">暂无新通知</div>
+          <div class="notif-empty"><i class="fas fa-bell-slash"></i><p>暂无新通知</p></div>
         </div>
       </div>
     </div>
@@ -48,25 +57,29 @@
 <div class="main-container">
   <!-- 左侧导航栏 -->
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <h3><i class="fas fa-folder-tree"></i> 产品资料</h3>
+    <div class="sidebar-search">
+      <i class="fas fa-search"></i>
+      <input type="text" id="sidebarSearch" placeholder="筛选分类...">
     </div>
     <nav class="sidebar-nav">
-      <ul class="nav-tree" id="navTree">
-        <!-- 由config动态生成 -->
-      </ul>
+      <div class="sidebar-section-title">产品资料</div>
+      <ul class="nav-tree" id="navTree"></ul>
     </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-stats">
+        <div class="stat-item"><span class="stat-num" id="statTotal">0</span><span class="stat-label">总资源</span></div>
+        <div class="stat-item"><span class="stat-num" id="statToday">0</span><span class="stat-label">今日新增</span></div>
+      </div>
+    </div>
   </aside>
 
   <div class="content-wrapper">
-    <!-- 书架标签 -->
+    <!-- 书架标签 + 面包屑 -->
     <div class="tabs-bar">
-      <div class="tabs" id="tabsBar">
-        <!-- 由JS动态生成 -->
-      </div>
+      <div class="tabs" id="tabsBar"></div>
     </div>
 
-    <!-- Banner 轮播区（全宽） -->
+    <!-- Banner 轮播 -->
     <div class="banner-section">
       <div class="banner-carousel" id="bannerCarousel">
         <div class="banner-track" id="bannerTrack"></div>
@@ -76,41 +89,46 @@
       </div>
     </div>
 
-    <!-- 内容区：左侧筛选 + 右侧资源列表 -->
+    <!-- 快捷统计卡片 -->
+    <div class="quick-stats" id="quickStats">
+      <div class="qs-card">
+        <div class="qs-icon" style="background:linear-gradient(135deg,#667eea,#764ba2)"><i class="fas fa-file-lines"></i></div>
+        <div class="qs-info"><div class="qs-num" id="qsTotal">0</div><div class="qs-label">全部资源</div></div>
+      </div>
+      <div class="qs-card">
+        <div class="qs-icon" style="background:linear-gradient(135deg,#f093fb,#f5576c)"><i class="fas fa-download"></i></div>
+        <div class="qs-info"><div class="qs-num" id="qsDownloads">0</div><div class="qs-label">总下载量</div></div>
+      </div>
+      <div class="qs-card">
+        <div class="qs-icon" style="background:linear-gradient(135deg,#4facfe,#00f2fe)"><i class="fas fa-tags"></i></div>
+        <div class="qs-info"><div class="qs-num" id="qsCategories">0</div><div class="qs-label">资料类别</div></div>
+      </div>
+      <div class="qs-card">
+        <div class="qs-icon" style="background:linear-gradient(135deg,#43e97b,#38f9d7)"><i class="fas fa-clock"></i></div>
+        <div class="qs-info"><div class="qs-num" id="qsRecent">0</div><div class="qs-label">近7日上传</div></div>
+      </div>
+    </div>
+
+    <!-- 筛选 + 列表 -->
     <div class="content-body">
-      <!-- 左侧筛选面板 -->
       <aside class="filter-panel" id="filterPanel">
         <div class="filter-section">
-          <h4 class="filter-title">
-            <i class="fas fa-tags"></i> 类别
-            <button class="filter-clear-btn" id="btnClearCategory">清空</button>
-          </h4>
-          <div class="filter-body" id="filterCategories">
-            <!-- 由JS动态生成 -->
-          </div>
+          <h4 class="filter-title"><i class="fas fa-tags"></i> 类别 <button class="filter-clear-btn" id="btnClearCategory">清空</button></h4>
+          <div class="filter-body" id="filterCategories"></div>
         </div>
         <div class="filter-section">
-          <h4 class="filter-title">
-            <i class="fas fa-file"></i> 文件格式
-            <button class="filter-clear-btn" id="btnClearFormat">清空</button>
-          </h4>
-          <div class="filter-body" id="filterFormats">
-            <!-- 由JS动态生成 -->
-          </div>
+          <h4 class="filter-title"><i class="fas fa-file"></i> 格式 <button class="filter-clear-btn" id="btnClearFormat">清空</button></h4>
+          <div class="filter-body" id="filterFormats"></div>
         </div>
       </aside>
 
-      <!-- 资源列表 -->
       <main class="resource-main">
         <div class="resource-toolbar">
           <div class="toolbar-left">
-            <span class="result-info">
-              筛选出 <strong id="resultCount">0</strong> 条结果
-            </span>
+            <span class="result-info">共 <strong id="resultCount">0</strong> 条资源</span>
           </div>
           <div class="toolbar-right">
             <div class="sort-select">
-              <i class="fas fa-arrow-down-wide-short"></i>
               <select id="sortSelect">
                 <option value="newest">最新上传</option>
                 <option value="downloads">下载最多</option>
@@ -118,20 +136,14 @@
               </select>
             </div>
             <div class="view-toggle">
-              <button class="view-btn active" data-view="list" title="列表视图">
-                <i class="fas fa-list"></i>
-              </button>
-              <button class="view-btn" data-view="grid" title="网格视图">
-                <i class="fas fa-grip"></i>
-              </button>
+              <button class="view-btn active" data-view="list" title="列表"><i class="fas fa-list"></i></button>
+              <button class="view-btn" data-view="grid" title="网格"><i class="fas fa-grip"></i></button>
             </div>
           </div>
         </div>
-
         <div class="resource-list" id="resourceList"></div>
-
         <div class="load-more">
-          <div class="pagination-info">显示 0 / 共 0 条</div>
+          <div class="pagination-info"></div>
           <button class="btn-load-more" id="btnLoadMore">加载更多</button>
         </div>
       </main>
@@ -148,58 +160,28 @@
     </div>
     <div class="modal-body">
       <div class="upload-zone" id="uploadZone">
-        <i class="fas fa-cloud-arrow-up"></i>
+        <div class="upload-zone-icon"><i class="fas fa-cloud-arrow-up"></i></div>
         <p>拖拽文件到此处，或 <label for="fileInput" class="upload-link">点击选择文件</label></p>
-        <span>支持 PDF、Word、Excel、PPT、视频、图片、压缩包等格式</span>
+        <span>支持 PDF、Word、Excel、PPT、视频、图片、压缩包</span>
         <input type="file" id="fileInput" multiple hidden>
       </div>
       <div class="upload-file-list" id="uploadFileList"></div>
       <div class="upload-form">
         <div class="form-row">
-          <div class="form-group">
-            <label>资源名称 <span class="required">*</span></label>
-            <input type="text" id="uploadName" placeholder="输入资源名称">
-          </div>
-          <div class="form-group">
-            <label>版本号</label>
-            <input type="text" id="uploadVersion" placeholder="如 V2.0.0">
-          </div>
+          <div class="form-group"><label>资源名称 <span class="required">*</span></label><input type="text" id="uploadName" placeholder="输入资源名称"></div>
+          <div class="form-group"><label>版本号</label><input type="text" id="uploadVersion" placeholder="如 V2.0.0"></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>所属产品 <span class="required">*</span></label>
-            <select id="uploadProduct"><option value="">请选择产品</option></select>
-          </div>
-          <div class="form-group">
-            <label>资料类别 <span class="required">*</span></label>
-            <select id="uploadCategory"><option value="">请选择类别</option></select>
-          </div>
+          <div class="form-group"><label>所属产品 <span class="required">*</span></label><select id="uploadProduct"><option value="">请选择产品</option></select></div>
+          <div class="form-group"><label>资料类别 <span class="required">*</span></label><select id="uploadCategory"><option value="">请选择类别</option></select></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>书架归属 <span class="required">*</span></label>
-            <select id="uploadShelf"><option value="">请选择书架</option></select>
-          </div>
-          <div class="form-group">
-            <label>文件格式</label>
-            <select id="uploadFormat"><option value="">自动识别</option></select>
-          </div>
+          <div class="form-group"><label>书架归属 <span class="required">*</span></label><select id="uploadShelf"><option value="">请选择书架</option></select></div>
+          <div class="form-group"><label>文件格式</label><select id="uploadFormat"><option value="">自动识别</option></select></div>
         </div>
-        <div class="form-group">
-          <label>存储路径</label>
-          <input type="text" id="uploadPath" placeholder="/resources/" readonly>
-        </div>
-        <div class="form-group">
-          <label>资源描述</label>
-          <textarea id="uploadDesc" rows="3" placeholder="简要描述资源内容..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>标签</label>
-          <div class="tag-input-wrapper" id="tagInputWrapper">
-            <div class="tag-list" id="tagList"></div>
-            <input type="text" id="tagInput" placeholder="输入标签后按回车添加">
-          </div>
-        </div>
+        <div class="form-group"><label>存储路径</label><input type="text" id="uploadPath" placeholder="/resources/" readonly></div>
+        <div class="form-group"><label>资源描述</label><textarea id="uploadDesc" rows="3" placeholder="简要描述资源内容..."></textarea></div>
+        <div class="form-group"><label>标签</label><div class="tag-input-wrapper" id="tagInputWrapper"><div class="tag-list" id="tagList"></div><input type="text" id="tagInput" placeholder="输入标签后按回车"></div></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -224,7 +206,6 @@
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast-container" id="toastContainer"></div>
 
 <script src="config.js"></script>
