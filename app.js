@@ -252,6 +252,55 @@ function toggleFav(id) { if(state.favorites.has(id)){state.favorites.delete(id);
 function downloadResource(id) { const r=RESOURCE_DATA.find(x=>x.id===id); if(r){r.downloads++;saveResources(RESOURCE_DATA);} showToast('success','开始下载...'); renderResources(); updateQuickStats(); }
 
 // ==========================================
+// 文件类型自动识别映射
+// ==========================================
+const EXT_TO_FORMAT = {
+  pdf:'pdf', doc:'word', docx:'word', xls:'excel', xlsx:'excel', csv:'excel',
+  ppt:'ppt', pptx:'ppt', mp4:'video', avi:'video', mov:'video', wmv:'video', mkv:'video', flv:'video', webm:'video',
+  jpg:'image', jpeg:'image', png:'image', gif:'image', bmp:'image', svg:'image', webp:'image', tiff:'image',
+  zip:'zip', rar:'zip', '7z':'zip', tar:'zip', gz:'zip',
+};
+
+// 根据文件名自动推断资料类别
+function autoDetectCategory(fileName) {
+  const lower = fileName.toLowerCase();
+  if (/安装|部署|install|deploy/.test(lower)) return 'install-guide';
+  if (/手册|manual|操作/.test(lower)) return 'user-manual';
+  if (/配置|config/.test(lower)) return 'config-guide';
+  if (/api|sdk|接口|开发/.test(lower)) return 'api-doc';
+  if (/版本|release|更新|changelog/.test(lower)) return 'release-note';
+  if (/白皮书|whitepaper|趋势|报告/.test(lower)) return 'white-paper';
+  if (/spec|彩页|规格/.test(lower)) return 'product-spec';
+  if (/方案|solution|架构/.test(lower)) return 'product-plan';
+  if (/详情|介绍|宣传|overview/.test(lower)) return 'product-detail';
+  return '';
+}
+
+// 根据文件名自动推断书架
+function autoDetectShelf(fileName) {
+  const lower = fileName.toLowerCase();
+  if (/营销|宣传|彩页|白皮书|介绍|详情/.test(lower)) return 'marketing';
+  if (/项目|架构|api|sdk|开发/.test(lower)) return 'project';
+  if (/交付|安装|部署|配置|手册|操作/.test(lower)) return 'delivery';
+  if (/案例|case/.test(lower)) return 'cases';
+  return '';
+}
+
+// 根据文件名自动生成标签
+function autoDetectTags(fileName) {
+  const tags = [];
+  const lower = fileName.toLowerCase();
+  if (/安防/.test(lower)) tags.push('安防');
+  if (/教育/.test(lower)) tags.push('教育');
+  if (/金融/.test(lower)) tags.push('金融');
+  if (/交通/.test(lower)) tags.push('交通');
+  if (/培训/.test(lower)) tags.push('培训');
+  if (/api|sdk/.test(lower)) tags.push('开发');
+  if (/视频|video/.test(lower)) tags.push('视频');
+  return tags;
+}
+
+// ==========================================
 // 上传
 // ==========================================
 function initUpload() {
@@ -266,33 +315,170 @@ function initUpload() {
 
 function handleFiles(files) {
   const list=$('#uploadFileList'); if(!list) return;
-  state.uploadedFiles=Array.from(files);
-  list.innerHTML=state.uploadedFiles.map((f,i)=>{
-    const ext=f.name.split('.').pop().toLowerCase();
-    const fk={pdf:'pdf',doc:'word',docx:'word',xls:'excel',xlsx:'excel',ppt:'ppt',pptx:'ppt',mp4:'video',avi:'video',mov:'video',jpg:'image',jpeg:'image',png:'image',gif:'image',zip:'zip',rar:'zip','7z':'zip'}[ext]||'pdf';
-    const fmt=FORMAT_ICONS[fk];
-    return`<div class="upload-file-item"><div class="ufi-icon ${fmt.class}"><i class="${fmt.icon}"></i></div><div class="ufi-info"><div class="ufi-name">${f.name}</div><div class="ufi-size">${(f.size/1024/1024).toFixed(2)} MB</div></div><button class="ufi-remove" onclick="removeFile(${i})"><i class="fas fa-times"></i></button></div>`;
+  // 追加到已有文件列表（支持多次拖拽/选择）
+  const newFiles = Array.from(files);
+  state.uploadedFiles = state.uploadedFiles.concat(newFiles);
+
+  list.innerHTML = state.uploadedFiles.map((f,i) => {
+    const ext = f.name.split('.').pop().toLowerCase();
+    const fk = EXT_TO_FORMAT[ext] || 'pdf';
+    const fmt = FORMAT_ICONS[fk];
+    const autoCat = autoDetectCategory(f.name);
+    const catName = autoCat ? (getCategoryMap(APP_CONFIG)[autoCat] || autoCat) : '';
+    return `<div class="upload-file-item">
+      <div class="ufi-icon ${fmt.class}"><i class="${fmt.icon}"></i></div>
+      <div class="ufi-info">
+        <div class="ufi-name">${f.name}</div>
+        <div class="ufi-size">${(f.size/1024/1024).toFixed(2)} MB${catName ? ' · <span style="color:var(--success);font-weight:600">自动分类: '+catName+'</span>' : ''}</div>
+      </div>
+      <button class="ufi-remove" onclick="removeFile(${i})"><i class="fas fa-times"></i></button>
+    </div>`;
   }).join('');
-  if(state.uploadedFiles.length>0&&!$('#uploadName').value){
-    const fn=state.uploadedFiles[0].name;$('#uploadName').value=fn.substring(0,fn.lastIndexOf('.'));
-    const ext=fn.split('.').pop().toLowerCase();
-    const fk={pdf:'pdf',doc:'word',docx:'word',xls:'excel',xlsx:'excel',ppt:'ppt',pptx:'ppt',mp4:'video',avi:'video',mov:'video',jpg:'image',jpeg:'image',png:'image',gif:'image',zip:'zip',rar:'zip','7z':'zip'}[ext]||'';
-    if(fk) $('#uploadFormat').value=fk;
+
+  // 批量上传时显示文件数量统计
+  if (state.uploadedFiles.length > 1) {
+    const totalSize = state.uploadedFiles.reduce((s,f) => s+f.size, 0);
+    list.insertAdjacentHTML('beforeend', `<div class="upload-batch-info"><i class="fas fa-layer-group"></i> 已选择 <strong>${state.uploadedFiles.length}</strong> 个文件，共 <strong>${(totalSize/1024/1024).toFixed(1)} MB</strong></div>`);
+  }
+
+  // 自动填充第一个文件的信息（仅当表单为空时）
+  if (state.uploadedFiles.length > 0 && !$('#uploadName').value) {
+    const firstFile = state.uploadedFiles[0];
+    const fn = firstFile.name;
+    const baseName = fn.substring(0, fn.lastIndexOf('.'));
+    const ext = fn.split('.').pop().toLowerCase();
+    const fk = EXT_TO_FORMAT[ext] || '';
+
+    // 批量上传时资源名称用通用名
+    if (state.uploadedFiles.length > 1) {
+      $('#uploadName').value = `批量上传 (${state.uploadedFiles.length}个文件)`;
+    } else {
+      $('#uploadName').value = baseName;
+    }
+
+    // 自动识别格式
+    if (fk) $('#uploadFormat').value = fk;
+
+    // 自动识别类别
+    const autoCat = autoDetectCategory(fn);
+    if (autoCat) $('#uploadCategory').value = autoCat;
+
+    // 自动识别书架
+    const autoShelf = autoDetectShelf(fn);
+    if (autoShelf) $('#uploadShelf').value = autoShelf;
+
+    // 自动生成标签
+    const autoTags = autoDetectTags(fn);
+    if (autoTags.length > 0) {
+      state.tags = [...new Set([...state.tags, ...autoTags])];
+      renderTagList();
+    }
   }
 }
 
-function removeFile(idx){state.uploadedFiles.splice(idx,1);handleFiles(state.uploadedFiles);}
+function removeFile(idx) {
+  state.uploadedFiles.splice(idx, 1);
+  // 重新渲染文件列表
+  const list = $('#uploadFileList');
+  if (!list) return;
+  list.innerHTML = state.uploadedFiles.map((f, i) => {
+    const ext = f.name.split('.').pop().toLowerCase();
+    const fk = EXT_TO_FORMAT[ext] || 'pdf';
+    const fmt = FORMAT_ICONS[fk];
+    const autoCat = autoDetectCategory(f.name);
+    const catName = autoCat ? (getCategoryMap(APP_CONFIG)[autoCat] || autoCat) : '';
+    return `<div class="upload-file-item">
+      <div class="ufi-icon ${fmt.class}"><i class="${fmt.icon}"></i></div>
+      <div class="ufi-info">
+        <div class="ufi-name">${f.name}</div>
+        <div class="ufi-size">${(f.size/1024/1024).toFixed(2)} MB${catName ? ' · <span style="color:var(--success);font-weight:600">自动分类: '+catName+'</span>' : ''}</div>
+      </div>
+      <button class="ufi-remove" onclick="removeFile(${i})"><i class="fas fa-times"></i></button>
+    </div>`;
+  }).join('');
+  if (state.uploadedFiles.length > 1) {
+    const totalSize = state.uploadedFiles.reduce((s,f) => s+f.size, 0);
+    list.insertAdjacentHTML('beforeend', `<div class="upload-batch-info"><i class="fas fa-layer-group"></i> 已选择 <strong>${state.uploadedFiles.length}</strong> 个文件，共 <strong>${(totalSize/1024/1024).toFixed(1)} MB</strong></div>`);
+  }
+  if (state.uploadedFiles.length === 0) {
+    $('#uploadName').value = '';
+    $('#uploadFormat').value = '';
+    $('#uploadCategory').value = '';
+    $('#uploadShelf').value = '';
+  }
+}
 
 function submitUpload() {
   const name=$('#uploadName').value.trim(), product=$('#uploadProduct').value, category=$('#uploadCategory').value, shelf=$('#uploadShelf').value, format=$('#uploadFormat').value||'pdf', version=$('#uploadVersion').value.trim(), desc=$('#uploadDesc').value.trim(), path=$('#uploadPath').value;
-  if(!name){showToast('error','请输入资源名称');return;} if(!product){showToast('error','请选择所属产品');return;} if(!category){showToast('error','请选择资料类别');return;} if(!shelf){showToast('error','请选择书架归属');return;}
-  const totalSize=state.uploadedFiles.reduce((s,f)=>s+f.size,0);
-  const sizeStr=totalSize>0?(totalSize/1024/1024).toFixed(1)+'MB':'0MB';
-  const today=new Date().toISOString().slice(0,10);
-  RESOURCE_DATA.unshift({id:Date.now(),title:name,category,format,shelf,product,version,size:sizeStr,date:today,downloads:0,path,description:desc,tags:[...state.tags]});
-  saveResources(RESOURCE_DATA);
-  showToast('success',`资源「${name}」上传成功`);
-  addNotification(`资源「${name}」上传成功`,'upload');
+  if(!name){showToast('error','请输入资源名称');return;} if(!product){showToast('error','请选择所属产品');return;} if(!shelf){showToast('error','请选择书架归属');return;}
+
+  const today = new Date().toISOString().slice(0,10);
+  const isBatch = state.uploadedFiles.length > 1;
+
+  if (isBatch) {
+    // 批量上传：每个文件独立创建一条资源记录，自动识别类别和格式
+    let successCount = 0;
+    state.uploadedFiles.forEach(f => {
+      const ext = f.name.split('.').pop().toLowerCase();
+      const fileFormat = EXT_TO_FORMAT[ext] || format;
+      const fileCategory = autoDetectCategory(f.name) || category;
+      const fileShelf = autoDetectShelf(f.name) || shelf;
+      const fileTags = [...new Set([...state.tags, ...autoDetectTags(f.name)])];
+      const baseName = f.name.substring(0, f.name.lastIndexOf('.'));
+      const sizeStr = (f.size/1024/1024).toFixed(1) + 'MB';
+
+      if (!fileCategory) return; // 跳过无法分类的（但一般不会发生，因为有fallback）
+
+      RESOURCE_DATA.unshift({
+        id: Date.now() + Math.random(),
+        title: baseName,
+        category: fileCategory || 'product-detail',
+        format: fileFormat,
+        shelf: fileShelf || shelf,
+        product: product,
+        version: version,
+        size: sizeStr,
+        date: today,
+        downloads: 0,
+        path: path + f.name,
+        description: desc || `批量上传文件: ${f.name}`,
+        tags: fileTags,
+      });
+      successCount++;
+    });
+
+    saveResources(RESOURCE_DATA);
+    showToast('success', `批量上传成功！共 ${successCount} 个文件`);
+    addNotification(`批量上传 ${successCount} 个资源文件`, 'upload');
+
+  } else {
+    // 单文件上传
+    const totalSize = state.uploadedFiles.reduce((s,f)=>s+f.size,0);
+    const sizeStr = totalSize > 0 ? (totalSize/1024/1024).toFixed(1)+'MB' : '0MB';
+    const finalCategory = category || autoDetectCategory(name) || 'product-detail';
+
+    RESOURCE_DATA.unshift({
+      id: Date.now(),
+      title: name,
+      category: finalCategory,
+      format: format,
+      shelf: shelf,
+      product: product,
+      version: version,
+      size: sizeStr,
+      date: today,
+      downloads: 0,
+      path: path,
+      description: desc,
+      tags: [...state.tags],
+    });
+
+    saveResources(RESOURCE_DATA);
+    showToast('success', `资源「${name}」上传成功`);
+    addNotification(`资源「${name}」上传成功`, 'upload');
+  }
+
+  // 重置表单
   $('#uploadName').value='';$('#uploadVersion').value='';$('#uploadProduct').value='';$('#uploadCategory').value='';$('#uploadShelf').value='';$('#uploadFormat').value='';$('#uploadPath').value='/resources/';$('#uploadDesc').value='';
   state.uploadedFiles=[];state.tags=[];$('#uploadFileList').innerHTML='';$('#tagList').innerHTML='';
   closeModal('uploadModal');renderResources();renderSidebar();updateQuickStats();
