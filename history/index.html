@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>中台支撑资源库 - 历史版本</title>
+<style>
+body { font-family: -apple-system, 'PingFang SC', sans-serif; background: #F7FAFC; padding: 40px; max-width: 700px; margin: 0 auto; }
+h1 { font-size: 22px; color: #1A202C; margin-bottom: 8px; }
+p { font-size: 14px; color: #718096; margin-bottom: 24px; }
+.version { background: #FFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+.version h3 { font-size: 15px; color: #2B6CB0; margin-bottom: 6px; }
+.version .date { font-size: 12px; color: #A0AEC0; margin-bottom: 10px; }
+.version .desc { font-size: 13px; color: #4A5568; margin-bottom: 12px; line-height: 1.6; }
+.version .files { display: flex; flex-wrap: wrap; gap: 6px; }
+.version .files a { font-size: 12px; padding: 4px 12px; background: #EBF4FF; color: #2B6CB0; border-radius: 4px; text-decoration: none; }
+.version .files a:hover { background: #2B6CB0; color: #FFF; }
+.back { display: inline-block; margin-top: 20px; font-size: 13px; color: #2B6CB0; text-decoration: none; }
+.back:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<h1>历史版本归档</h1>
+<p>以下是中台支撑资源库各版本的前端页面文件，可直接在浏览器中打开查看。</p>
+
+<div class="version">
+  <h3>V1.0 - 初始版本</h3>
+  <div class="date">2026-03-08 · 首次发布</div>
+  <div class="desc">初始版本，包含前台资源库页面、登录页面。硬编码的侧边栏菜单和示例数据。</div>
+  <div class="files">
+    <a href="index_v1.html">前台首页</a>
+    <a href="login_v1.html">登录页</a>
+    <a href="style_v1.css">样式表</a>
+    <a href="app_v1.js">交互逻辑</a>
+  </div>
+</div>
+
+<div class="version">
+  <h3>V2.0 - 前后台配置联动版</h3>
+  <div class="date">2026-03-08 · 重构发布</div>
+  <div class="desc">引入config.js统一配置，前后台数据联动。新增后台管理页面（菜单/Banner/类别增删改查）。Banner右侧有最新上传区域，筛选面板在右侧。</div>
+  <div class="files">
+    <a href="index_v2.html">前台首页</a>
+    <a href="admin_v2.html">后台管理</a>
+    <a href="login_v2.html">登录页</a>
+    <a href="style_v2.css">样式表</a>
+    <a href="app_v2.js">交互逻辑</a>
+    <a href="config_v2.js">配置文件</a>
+  </div>
+</div>
+
+<div class="version">
+  <h3>V3.0 - 当前版本（恢复参考图布局）</h3>
+  <div class="date">2026-03-08 · 布局修复</div>
+  <div class="desc">恢复参考图UI布局：侧边栏默认只展开第一个分类，Banner全宽显示，筛选面板移至左侧，空状态文案调整，清除示例数据。保留后台增删改查功能。</div>
+  <div class="files">
+    <a href="../index.html">前台首页（当前）</a>
+    <a href="../admin.html">后台管理（当前）</a>
+    <a href="../login.html">登录页（当前）</a>
+  </div>
+</div>
+
+<a class="back" href="../index.html">&larr; 返回资源库首页</a>
+</body>
+</html>

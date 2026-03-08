@@ -1,15 +1,22 @@
 /* ============================================
-   中台支撑资源库 - 前台交互逻辑（恢复参考图布局）
-   依赖 config.js
+   中台支撑资源库 - 前台交互逻辑
+   依赖 config.js（统一配置）
    ============================================ */
 
+// ==========================================
+// 资源数据（localStorage持久化）
+// ==========================================
 const RESOURCE_STORAGE_KEY = 'resourceCenter_resources';
 
 function loadResources() {
-  try { const s = localStorage.getItem(RESOURCE_STORAGE_KEY); return s ? JSON.parse(s) : []; }
-  catch(e) { return []; }
+  try {
+    const s = localStorage.getItem(RESOURCE_STORAGE_KEY);
+    return s ? JSON.parse(s) : [];
+  } catch(e) { return []; }
 }
-function saveResources(data) { localStorage.setItem(RESOURCE_STORAGE_KEY, JSON.stringify(data)); }
+function saveResources(data) {
+  localStorage.setItem(RESOURCE_STORAGE_KEY, JSON.stringify(data));
+}
 
 let RESOURCE_DATA = loadResources();
 
@@ -23,6 +30,9 @@ const FORMAT_ICONS = {
   zip:   { icon: 'fas fa-file-zipper',     class: 'zip' },
 };
 
+// ==========================================
+// 状态
+// ==========================================
 let state = {
   currentView: 'list',
   currentSort: 'newest',
@@ -36,12 +46,13 @@ let state = {
   tags: [],
 };
 
-let APP_CONFIG = null;
+let APP_CONFIG = null; // 运行时配置
+
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => document.querySelectorAll(sel);
 
 // ==========================================
-// 登录
+// 登录检测
 // ==========================================
 function checkAuth() {
   const user = localStorage.getItem('resourceCenter_user');
@@ -77,14 +88,14 @@ function handleLogout() {
 }
 
 // ==========================================
-// 侧边栏（默认只展开第一个分类）
+// 动态渲染侧边栏菜单（从config）
 // ==========================================
 function renderSidebar() {
   const tree = $('#navTree');
   if (!tree) return;
   const menuTree = APP_CONFIG.menuTree || [];
 
-  tree.innerHTML = menuTree.map((group, gi) => {
+  tree.innerHTML = menuTree.map(group => {
     const childCount = RESOURCE_DATA.filter(r => (group.children||[]).some(c => c.id === r.product)).length;
     const childrenHtml = (group.children||[]).map(child => {
       const cnt = RESOURCE_DATA.filter(r => r.product === child.id).length;
@@ -97,10 +108,7 @@ function renderSidebar() {
       </li>`;
     }).join('');
 
-    // 只展开第一个分类
-    const expanded = gi === 0 ? ' expanded' : '';
-
-    return `<li class="nav-item has-children${expanded}">
+    return `<li class="nav-item has-children">
       <div class="nav-link" data-category="${group.id}">
         <i class="fas fa-chevron-right toggle-icon"></i>
         <i class="${group.icon || 'fas fa-folder'} cat-icon"></i>
@@ -111,14 +119,15 @@ function renderSidebar() {
     </li>`;
   }).join('');
 
-  // 展开/折叠
+  // 绑定展开/折叠
   tree.querySelectorAll('.has-children > .nav-link').forEach(link => {
     link.addEventListener('click', () => {
-      link.parentElement.classList.toggle('expanded');
+      const li = link.parentElement;
+      li.classList.toggle('expanded');
     });
   });
 
-  // 产品筛选
+  // 绑定产品筛选
   tree.querySelectorAll('.nav-link[data-product]').forEach(link => {
     link.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -131,7 +140,7 @@ function renderSidebar() {
 }
 
 // ==========================================
-// 书架标签
+// 动态渲染书架标签
 // ==========================================
 function renderTabs() {
   const bar = $('#tabsBar');
@@ -155,7 +164,7 @@ function renderTabs() {
 }
 
 // ==========================================
-// 筛选面板
+// 动态渲染筛选面板（类别 + 格式）
 // ==========================================
 function renderFilters() {
   const catBox = $('#filterCategories');
@@ -173,6 +182,7 @@ function renderFilters() {
     `<label class="filter-checkbox"><input type="checkbox" value="${f.id}"> <span>${f.name}</span></label>`
   ).join('');
 
+  // 绑定事件
   catBox.querySelectorAll('input').forEach(cb => {
     cb.addEventListener('change', () => {
       state.selectedCategories = Array.from(catBox.querySelectorAll('input:checked')).map(i => i.value);
@@ -186,21 +196,28 @@ function renderFilters() {
     });
   });
 
-  // 清空按钮
-  $('#btnClearCategory')?.addEventListener('click', () => {
-    catBox.querySelectorAll('input').forEach(cb => cb.checked = false);
-    state.selectedCategories = [];
-    renderResources();
+  // 折叠
+  $$('.filter-title').forEach(title => {
+    title.addEventListener('click', () => {
+      title.parentElement.classList.toggle('collapsed');
+    });
   });
-  $('#btnClearFormat')?.addEventListener('click', () => {
+
+  // 重置
+  $('#btnResetFilter')?.addEventListener('click', () => {
+    catBox.querySelectorAll('input').forEach(cb => cb.checked = false);
     fmtBox.querySelectorAll('input').forEach(cb => cb.checked = false);
+    state.selectedCategories = [];
     state.selectedFormats = [];
+    state.selectedProduct = '';
+    $('#navTree')?.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
     renderResources();
+    showToast('success', '筛选已重置');
   });
 }
 
 // ==========================================
-// 上传表单下拉
+// 动态渲染上传表单下拉（产品/类别/书架/格式）
 // ==========================================
 function renderUploadSelects() {
   const prodSel = $('#uploadProduct');
@@ -242,12 +259,17 @@ function renderUploadSelects() {
     fmtSel.innerHTML = html;
   }
 
+  // 产品选择联动路径
   prodSel?.addEventListener('change', () => {
     const val = prodSel.value;
     if (!val) { $('#uploadPath').value = '/resources/'; return; }
+    // 查找所属分组
     let basePath = '/resources/';
     for (const g of APP_CONFIG.menuTree) {
-      if ((g.children||[]).some(c => c.id === val)) { basePath += g.id + '/'; break; }
+      if ((g.children||[]).some(c => c.id === val)) {
+        basePath += g.id + '/';
+        break;
+      }
     }
     basePath += val + '/';
     $('#uploadPath').value = basePath;
@@ -255,7 +277,7 @@ function renderUploadSelects() {
 }
 
 // ==========================================
-// Banner
+// Banner 轮播
 // ==========================================
 function renderBanner() {
   const track = $('#bannerTrack');
@@ -265,13 +287,21 @@ function renderBanner() {
   const banners = (APP_CONFIG.banners || []).filter(b => b.enabled).sort((a,b) => a.sort - b.sort);
 
   if (banners.length === 0) {
-    track.innerHTML = '<div class="banner-slide" style="background:linear-gradient(135deg,#1A365D,#2B6CB0)"><div class="banner-content"><div class="banner-title">欢迎使用中台支撑资源库</div><div class="banner-desc">请在后台管理中配置Banner内容</div></div></div>';
+    track.innerHTML = '<div class="banner-slide" style="background:linear-gradient(135deg,#1A365D,#2B6CB0);display:flex;align-items:center;justify-content:center;"><div class="banner-content"><div class="banner-title">欢迎使用中台支撑资源库</div><div class="banner-desc">请在后台管理中配置Banner内容</div></div></div>';
     dotsC.innerHTML = '';
     return;
   }
 
+  const defaultGradients = [
+    'linear-gradient(135deg,#1A365D,#2B6CB0)',
+    'linear-gradient(135deg,#22543D,#38A169)',
+    'linear-gradient(135deg,#553C9A,#805AD5)',
+    'linear-gradient(135deg,#744210,#D69E2E)',
+    'linear-gradient(135deg,#742A2A,#E53E3E)',
+  ];
+
   track.innerHTML = banners.map((b, i) => `
-    <div class="banner-slide" style="background:${b.gradient || 'linear-gradient(135deg,#1A365D,#2B6CB0)'}">
+    <div class="banner-slide" style="background:${b.gradient || defaultGradients[i % defaultGradients.length]}">
       <div class="banner-content">
         <div class="banner-tag">${b.tag || ''}</div>
         <div class="banner-title">${b.title}</div>
@@ -303,6 +333,29 @@ function renderBanner() {
 }
 
 // ==========================================
+// 最新上传列表
+// ==========================================
+function updateRecentList() {
+  const list = $('#recentList');
+  if (!list) return;
+  const recent = RESOURCE_DATA.slice(0, 6);
+  if (recent.length === 0) {
+    list.innerHTML = '<div class="recent-empty">暂无上传记录</div>';
+    return;
+  }
+  list.innerHTML = recent.map(r => {
+    const fmt = FORMAT_ICONS[r.format] || FORMAT_ICONS.pdf;
+    return `<div class="recent-item" onclick="showDetail(RESOURCE_DATA.find(x=>x.id===${r.id}))">
+      <div class="ri-icon ${fmt.class}"><i class="${fmt.icon}"></i></div>
+      <div class="ri-info">
+        <div class="ri-name">${r.title}</div>
+        <div class="ri-time">${r.date} · ${r.size}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ==========================================
 // 资源渲染
 // ==========================================
 function renderResources() {
@@ -310,19 +363,38 @@ function renderResources() {
   const productMap = getProductMap(APP_CONFIG);
   const categoryMap = getCategoryMap(APP_CONFIG);
 
-  if (state.currentTab !== 'all') filtered = filtered.filter(r => r.shelf === state.currentTab);
-  if (state.selectedProduct) filtered = filtered.filter(r => r.product === state.selectedProduct);
-  if (state.selectedCategories.length > 0) filtered = filtered.filter(r => state.selectedCategories.includes(r.category));
-  if (state.selectedFormats.length > 0) filtered = filtered.filter(r => state.selectedFormats.includes(r.format));
+  // 书架
+  if (state.currentTab !== 'all') {
+    filtered = filtered.filter(r => r.shelf === state.currentTab);
+  }
+  // 产品
+  if (state.selectedProduct) {
+    filtered = filtered.filter(r => r.product === state.selectedProduct);
+  }
+  // 类别
+  if (state.selectedCategories.length > 0) {
+    filtered = filtered.filter(r => state.selectedCategories.includes(r.category));
+  }
+  // 格式
+  if (state.selectedFormats.length > 0) {
+    filtered = filtered.filter(r => state.selectedFormats.includes(r.format));
+  }
+  // 搜索
   if (state.searchQuery) {
     const q = state.searchQuery.toLowerCase();
-    filtered = filtered.filter(r => r.title.toLowerCase().includes(q) || (r.description||'').toLowerCase().includes(q) || (r.tags||[]).some(t => t.toLowerCase().includes(q)));
+    filtered = filtered.filter(r =>
+      r.title.toLowerCase().includes(q) ||
+      (r.description||'').toLowerCase().includes(q) ||
+      (r.tags||[]).some(t => t.toLowerCase().includes(q))
+    );
   }
 
+  // 排序
   if (state.currentSort === 'newest') filtered.sort((a,b) => b.date.localeCompare(a.date));
   else if (state.currentSort === 'downloads') filtered.sort((a,b) => b.downloads - a.downloads);
   else if (state.currentSort === 'name') filtered.sort((a,b) => a.title.localeCompare(b.title));
 
+  // 更新计数
   const countEl = $('#resultCount');
   if (countEl) countEl.textContent = filtered.length;
 
@@ -331,12 +403,11 @@ function renderResources() {
 
   if (filtered.length === 0) {
     listEl.innerHTML = `<div class="empty-state">
-      <i class="fas fa-folder-open"></i>
-      <h4>暂无匹配的资源</h4>
-      <p>请尝试调整筛选条件或搜索关键词</p>
+      <i class="fas fa-inbox"></i>
+      <h4>暂无资源</h4>
+      <p>当前筛选条件下没有资源，请调整筛选或上传新资源</p>
+      <button class="btn-primary" onclick="openModal('uploadModal')"><i class="fas fa-upload"></i> 上传资源</button>
     </div>`;
-    const pgInfo = $('.pagination-info');
-    if (pgInfo) pgInfo.textContent = '';
     return;
   }
 
@@ -347,8 +418,14 @@ function renderResources() {
       return `<div class="resource-card" onclick="showDetail(RESOURCE_DATA.find(x=>x.id===${r.id}))">
         <div class="card-icon ${fmt.class}"><i class="${fmt.icon}"></i></div>
         <div class="card-title">${r.title}</div>
-        <div class="card-meta"><span>${categoryMap[r.category] || r.category}</span><span>${r.size}</span></div>
-        <div class="card-footer"><span><i class="fas fa-download"></i> ${r.downloads}</span><span>${r.date}</span></div>
+        <div class="card-meta">
+          <span>${categoryMap[r.category] || r.category}</span>
+          <span>${r.size}</span>
+        </div>
+        <div class="card-footer">
+          <span><i class="fas fa-download"></i> ${r.downloads}</span>
+          <span>${r.date}</span>
+        </div>
       </div>`;
     }).join('');
   } else {
@@ -363,7 +440,7 @@ function renderResources() {
           <div class="item-meta">
             <span class="meta-tag product"><i class="fas fa-cube"></i> ${productMap[r.product] || r.product}</span>
             <span class="meta-tag category"><i class="fas fa-tag"></i> ${categoryMap[r.category] || r.category}</span>
-            ${r.version ? '<span class="meta-tag version">'+r.version+'</span>' : ''}
+            <span class="meta-tag version">${r.version || ''}</span>
           </div>
         </div>
         <div class="item-stats">
@@ -379,6 +456,7 @@ function renderResources() {
     }).join('');
   }
 
+  // 分页信息
   const pgInfo = $('.pagination-info');
   if (pgInfo) pgInfo.textContent = `显示 ${filtered.length} / 共 ${RESOURCE_DATA.length} 条`;
 }
@@ -406,7 +484,8 @@ function showDetail(resource) {
       </div>
     </div>
     <div class="detail-desc"><h4>资源描述</h4><p>${resource.description || '暂无描述'}</p></div>
-    ${resource.tags && resource.tags.length ? '<div class="detail-tags"><h4>标签</h4><div>' + resource.tags.map(t=>'<span class="tag">'+t+'</span>').join('') + '</div></div>' : ''}`;
+    ${resource.tags && resource.tags.length ? '<div class="detail-tags"><h4>标签</h4><div>' + resource.tags.map(t=>'<span class="tag">'+t+'</span>').join('') + '</div></div>' : ''}
+  `;
   openModal('detailModal');
 }
 
@@ -454,6 +533,7 @@ function handleFiles(files) {
     </div>`;
   }).join('');
 
+  // 自动填充名称和格式
   if (state.uploadedFiles.length > 0 && !$('#uploadName').value) {
     const fn = state.uploadedFiles[0].name;
     $('#uploadName').value = fn.substring(0, fn.lastIndexOf('.'));
@@ -463,7 +543,10 @@ function handleFiles(files) {
   }
 }
 
-function removeFile(idx) { state.uploadedFiles.splice(idx, 1); handleFiles(state.uploadedFiles); }
+function removeFile(idx) {
+  state.uploadedFiles.splice(idx, 1);
+  handleFiles(state.uploadedFiles);
+}
 
 function submitUpload() {
   const name = $('#uploadName').value.trim();
@@ -484,15 +567,25 @@ function submitUpload() {
   const sizeStr = totalSize > 0 ? (totalSize/1024/1024).toFixed(1) + 'MB' : '0MB';
   const today = new Date().toISOString().slice(0,10);
 
-  RESOURCE_DATA.unshift({
-    id: Date.now(), title: name, category, format, shelf, product, version,
-    size: sizeStr, date: today, downloads: 0, path, description: desc, tags: [...state.tags],
-  });
+  const newResource = {
+    id: Date.now(),
+    title: name,
+    category, format, shelf, product, version,
+    size: sizeStr,
+    date: today,
+    downloads: 0,
+    path: path,
+    description: desc,
+    tags: [...state.tags],
+  };
+
+  RESOURCE_DATA.unshift(newResource);
   saveResources(RESOURCE_DATA);
 
   showToast('success', `资源上传成功！存储路径: ${path}`);
   addNotification(`资源「${name}」上传成功`, 'upload');
 
+  // 重置
   $('#uploadName').value = '';
   $('#uploadVersion').value = '';
   $('#uploadProduct').value = '';
@@ -508,6 +601,7 @@ function submitUpload() {
 
   closeModal('uploadModal');
   renderResources();
+  updateRecentList();
   renderSidebar();
 }
 
@@ -521,13 +615,16 @@ function initTagInput() {
     if (e.key === 'Enter' && input.value.trim()) {
       e.preventDefault();
       const tag = input.value.trim();
-      if (!state.tags.includes(tag)) { state.tags.push(tag); renderTagList(); }
+      if (!state.tags.includes(tag)) {
+        state.tags.push(tag);
+        renderTags();
+      }
       input.value = '';
     }
   });
 }
 
-function renderTagList() {
+function renderTags() {
   const list = $('#tagList');
   if (!list) return;
   list.innerHTML = state.tags.map((t, i) =>
@@ -535,7 +632,10 @@ function renderTagList() {
   ).join('');
 }
 
-function removeTag(idx) { state.tags.splice(idx, 1); renderTagList(); }
+function removeTag(idx) {
+  state.tags.splice(idx, 1);
+  renderTags();
+}
 
 // ==========================================
 // 搜索
@@ -546,8 +646,12 @@ function initSearch() {
   let timer;
   input.addEventListener('input', () => {
     clearTimeout(timer);
-    timer = setTimeout(() => { state.searchQuery = input.value.trim(); renderResources(); }, 300);
+    timer = setTimeout(() => {
+      state.searchQuery = input.value.trim();
+      renderResources();
+    }, 300);
   });
+  // Ctrl+K
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); input.focus(); }
   });
@@ -556,7 +660,12 @@ function initSearch() {
 // ==========================================
 // 排序 & 视图
 // ==========================================
-function initSort() { $('#sortSelect')?.addEventListener('change', e => { state.currentSort = e.target.value; renderResources(); }); }
+function initSort() {
+  $('#sortSelect')?.addEventListener('change', e => {
+    state.currentSort = e.target.value;
+    renderResources();
+  });
+}
 
 function initViewToggle() {
   $$('.view-btn').forEach(btn => {
@@ -611,11 +720,20 @@ function addNotification(title, type) {
 // ==========================================
 // 弹窗
 // ==========================================
-function openModal(id) { const m = document.getElementById(id); if (m) { m.classList.add('show'); document.body.style.overflow = 'hidden'; } }
-function closeModal(id) { const m = document.getElementById(id); if (m) { m.classList.remove('show'); document.body.style.overflow = ''; } }
+function openModal(id) {
+  const m = document.getElementById(id);
+  if (m) { m.classList.add('show'); document.body.style.overflow = 'hidden'; }
+}
+
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (m) { m.classList.remove('show'); document.body.style.overflow = ''; }
+}
 
 $$('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => { if (e.target === overlay) { overlay.classList.remove('show'); document.body.style.overflow = ''; } });
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) { overlay.classList.remove('show'); document.body.style.overflow = ''; }
+  });
 });
 
 // ==========================================
@@ -641,6 +759,28 @@ $('#btnLoadMore')?.addEventListener('click', () => {
 });
 
 // ==========================================
+// 面包屑
+// ==========================================
+function initBreadcrumb() {
+  $$('.breadcrumb span').forEach(span => {
+    span.addEventListener('click', () => {
+      if (span.querySelector('.fa-home')) {
+        state.currentTab = 'all';
+        state.searchQuery = '';
+        state.selectedCategories = [];
+        state.selectedFormats = [];
+        state.selectedProduct = '';
+        $('#globalSearch').value = '';
+        renderTabs();
+        renderFilters();
+        renderSidebar();
+        renderResources();
+      }
+    });
+  });
+}
+
+// ==========================================
 // 初始化
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -657,5 +797,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initUpload();
   initTagInput();
   initNotification();
+  initBreadcrumb();
   renderResources();
+  updateRecentList();
 });

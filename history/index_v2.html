@@ -46,44 +46,59 @@
 </header>
 
 <div class="main-container">
-  <!-- 左侧导航栏 -->
+  <!-- 左侧导航栏 - 由JS动态渲染 -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <h3><i class="fas fa-folder-tree"></i> 产品资料</h3>
     </div>
     <nav class="sidebar-nav">
       <ul class="nav-tree" id="navTree">
-        <!-- 由config动态生成 -->
+        <!-- 由config.js + app.js动态生成 -->
       </ul>
     </nav>
   </aside>
 
   <div class="content-wrapper">
-    <!-- 书架标签 -->
+    <!-- 书架标签 - 由JS动态渲染 -->
     <div class="tabs-bar">
       <div class="tabs" id="tabsBar">
         <!-- 由JS动态生成 -->
       </div>
+      <div class="breadcrumb">
+        <span><i class="fas fa-home"></i> 首页</span>
+        <i class="fas fa-chevron-right"></i>
+        <span class="current" id="breadcrumbCurrent">全部资源</span>
+      </div>
     </div>
 
-    <!-- Banner 轮播区（全宽） -->
+    <!-- Banner 轮播区 -->
     <div class="banner-section">
       <div class="banner-carousel" id="bannerCarousel">
-        <div class="banner-track" id="bannerTrack"></div>
+        <div class="banner-track" id="bannerTrack">
+          <!-- 由JS动态生成 -->
+        </div>
         <button class="banner-arrow banner-prev" id="bannerPrev"><i class="fas fa-chevron-left"></i></button>
         <button class="banner-arrow banner-next" id="bannerNext"><i class="fas fa-chevron-right"></i></button>
         <div class="banner-dots" id="bannerDots"></div>
       </div>
+      <div class="banner-recent" id="bannerRecent">
+        <div class="recent-header">
+          <i class="fas fa-clock"></i> 最新上传
+        </div>
+        <div class="recent-list" id="recentList">
+          <div class="recent-empty">暂无上传记录</div>
+        </div>
+      </div>
     </div>
 
-    <!-- 内容区：左侧筛选 + 右侧资源列表 -->
+    <!-- 筛选面板 + 内容区 -->
     <div class="content-body">
-      <!-- 左侧筛选面板 -->
+      <!-- 右侧筛选面板 - 由JS动态渲染 -->
       <aside class="filter-panel" id="filterPanel">
         <div class="filter-section">
           <h4 class="filter-title">
-            <i class="fas fa-tags"></i> 类别
-            <button class="filter-clear-btn" id="btnClearCategory">清空</button>
+            <i class="fas fa-tags"></i> 资料类别
+            <i class="fas fa-chevron-down toggle"></i>
           </h4>
           <div class="filter-body" id="filterCategories">
             <!-- 由JS动态生成 -->
@@ -92,12 +107,15 @@
         <div class="filter-section">
           <h4 class="filter-title">
             <i class="fas fa-file"></i> 文件格式
-            <button class="filter-clear-btn" id="btnClearFormat">清空</button>
+            <i class="fas fa-chevron-down toggle"></i>
           </h4>
           <div class="filter-body" id="filterFormats">
             <!-- 由JS动态生成 -->
           </div>
         </div>
+        <button class="filter-reset-btn" id="btnResetFilter">
+          <i class="fas fa-rotate-left"></i> 重置筛选
+        </button>
       </aside>
 
       <!-- 资源列表 -->
@@ -128,10 +146,14 @@
           </div>
         </div>
 
-        <div class="resource-list" id="resourceList"></div>
+        <div class="resource-list" id="resourceList">
+          <!-- 由JS动态渲染 -->
+        </div>
 
         <div class="load-more">
-          <div class="pagination-info">显示 0 / 共 0 条</div>
+          <div class="pagination-info">
+            显示 0 / 共 0 条
+          </div>
           <button class="btn-load-more" id="btnLoadMore">加载更多</button>
         </div>
       </main>
@@ -168,21 +190,33 @@
         <div class="form-row">
           <div class="form-group">
             <label>所属产品 <span class="required">*</span></label>
-            <select id="uploadProduct"><option value="">请选择产品</option></select>
+            <select id="uploadProduct">
+              <option value="">请选择产品</option>
+              <!-- 由JS动态生成 -->
+            </select>
           </div>
           <div class="form-group">
             <label>资料类别 <span class="required">*</span></label>
-            <select id="uploadCategory"><option value="">请选择类别</option></select>
+            <select id="uploadCategory">
+              <option value="">请选择类别</option>
+              <!-- 由JS动态生成 -->
+            </select>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>书架归属 <span class="required">*</span></label>
-            <select id="uploadShelf"><option value="">请选择书架</option></select>
+            <select id="uploadShelf">
+              <option value="">请选择书架</option>
+              <!-- 由JS动态生成 -->
+            </select>
           </div>
           <div class="form-group">
             <label>文件格式</label>
-            <select id="uploadFormat"><option value="">自动识别</option></select>
+            <select id="uploadFormat">
+              <option value="">自动识别</option>
+              <!-- 由JS动态生成 -->
+            </select>
           </div>
         </div>
         <div class="form-group">
