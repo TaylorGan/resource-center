@@ -63,7 +63,7 @@ const $$ = (sel) => document.querySelectorAll(sel);
 function checkAuth() {
   const user = localStorage.getItem('resourceCenter_user');
   if (!user) {
-    window.location.href = 'login.html';
+    // window.location.href = 'login.html'; // disabled for history
     return null;
   }
   return JSON.parse(user);
@@ -114,7 +114,7 @@ function handleLogout() {
   localStorage.removeItem('resourceCenter_user');
   showToast('success', '已退出登录');
   setTimeout(() => {
-    window.location.href = 'login.html';
+    // window.location.href = 'login.html'; // disabled for history
   }, 800);
 }
 
