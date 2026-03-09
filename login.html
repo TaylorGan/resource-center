@@ -79,152 +79,148 @@ body {
 
 .shape {
   position: absolute;
+  border: 2px solid rgba(255,255,255,0.1);
   border-radius: 50%;
-  opacity: 0.06;
   animation: float 15s ease-in-out infinite;
 }
 
-.shape:nth-child(1) {
-  width: 300px;
-  height: 300px;
-  background: #4299E1;
-  top: -5%;
-  left: -5%;
-  animation-delay: 0s;
-}
-
-.shape:nth-child(2) {
-  width: 200px;
-  height: 200px;
-  background: #63B3ED;
-  bottom: 10%;
-  right: -5%;
-  animation-delay: -5s;
-}
-
-.shape:nth-child(3) {
-  width: 150px;
-  height: 150px;
-  background: #90CDF4;
-  top: 40%;
-  left: 30%;
-  animation-delay: -10s;
-}
+.shape:nth-child(1) { width: 80px; height: 80px; top: 10%; left: 10%; animation-delay: 0s; }
+.shape:nth-child(2) { width: 120px; height: 120px; top: 60%; left: 15%; animation-delay: -3s; }
+.shape:nth-child(3) { width: 60px; height: 60px; top: 30%; right: 20%; animation-delay: -6s; }
+.shape:nth-child(4) { width: 100px; height: 100px; bottom: 15%; right: 10%; animation-delay: -9s; border-radius: 20%; }
+.shape:nth-child(5) { width: 40px; height: 40px; top: 75%; left: 50%; animation-delay: -12s; }
+.shape:nth-child(6) { width: 150px; height: 150px; top: 5%; right: 5%; animation-delay: -4s; border-radius: 30%; }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-30px) scale(1.05); }
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+  25% { transform: translateY(-20px) rotate(5deg); opacity: 0.6; }
+  50% { transform: translateY(-10px) rotate(-3deg); opacity: 0.4; }
+  75% { transform: translateY(-25px) rotate(2deg); opacity: 0.5; }
 }
 
-/* 品牌内容 */
 .brand-content {
   position: relative;
   z-index: 1;
   text-align: center;
-  max-width: 420px;
+  color: white;
 }
 
 .brand-logo {
-  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 32px;
 }
 
-.brand-logo img {
-  height: 56px;
-  filter: brightness(0) invert(1);
-  opacity: 0.95;
-}
-
-.brand-title {
+.brand-logo-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 28px;
-  font-weight: 700;
-  color: #FFFFFF;
-  margin-bottom: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.brand-logo-text {
+  font-size: 28px;
+  font-weight: 800;
   letter-spacing: 1px;
 }
 
-.brand-subtitle {
-  font-size: 15px;
-  color: rgba(255,255,255,0.7);
+.brand-desc {
+  font-size: 16px;
+  opacity: 0.85;
   margin-bottom: 48px;
-  line-height: 1.6;
+  line-height: 1.8;
 }
 
-/* 功能特性 */
-.features {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.brand-features {
+  display: flex;
+  flex-direction: column;
   gap: 20px;
   text-align: left;
+  max-width: 360px;
 }
 
-.feature-item {
+.brand-feature {
   display: flex;
+  align-items: center;
   gap: 14px;
-  padding: 18px;
+  padding: 14px 20px;
   background: rgba(255,255,255,0.08);
-  border-radius: 12px;
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
   transition: var(--transition);
+  animation: featureIn 0.6s ease backwards;
 }
 
-.feature-item:hover {
-  background: rgba(255,255,255,0.12);
-  transform: translateY(-2px);
+.brand-feature:nth-child(1) { animation-delay: 0.2s; }
+.brand-feature:nth-child(2) { animation-delay: 0.4s; }
+.brand-feature:nth-child(3) { animation-delay: 0.6s; }
+.brand-feature:nth-child(4) { animation-delay: 0.8s; }
+
+@keyframes featureIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
-.feature-icon {
+.brand-feature:hover {
+  background: rgba(255,255,255,0.14);
+  transform: translateX(6px);
+}
+
+.brand-feature i {
+  font-size: 20px;
   width: 40px;
   height: 40px;
-  border-radius: 10px;
   background: rgba(255,255,255,0.12);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
-.feature-icon i {
-  font-size: 16px;
-  color: rgba(255,255,255,0.85);
-}
-
-.feature-text h4 {
-  font-size: 13px;
+.brand-feature-text h4 {
+  font-size: 14px;
   font-weight: 600;
-  color: #FFFFFF;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
-.feature-text p {
-  font-size: 11px;
-  color: rgba(255,255,255,0.55);
-  line-height: 1.4;
-}
-
-/* 底部版权 */
-.brand-footer {
-  position: absolute;
-  bottom: 30px;
-  left: 0;
-  right: 0;
-  text-align: center;
+.brand-feature-text p {
   font-size: 12px;
-  color: rgba(255,255,255,0.3);
-  z-index: 1;
+  opacity: 0.7;
 }
 
 /* ============================================
    右侧登录区
    ============================================ */
-.login-section {
-  width: 480px;
+.login-panel {
+  width: 520px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 60px 56px;
+  align-items: center;
+  padding: 60px;
   background: var(--bg-white);
-  box-shadow: -10px 0 40px rgba(0,0,0,0.05);
+  position: relative;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 380px;
+  animation: loginIn 0.5s ease;
+}
+
+@keyframes loginIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .login-header {
@@ -233,7 +229,7 @@ body {
 
 .login-header h2 {
   font-size: 26px;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--text-primary);
   margin-bottom: 8px;
 }
@@ -243,17 +239,55 @@ body {
   color: var(--text-muted);
 }
 
+/* 登录方式切换 */
+.login-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 28px;
+  background: var(--bg-body);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.login-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.login-tab.active {
+  background: var(--bg-white);
+  color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.login-tab:hover:not(.active) {
+  color: var(--text-secondary);
+}
+
 /* 表单 */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
 .form-group {
-  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .form-group label {
-  display: block;
   font-size: 13px;
   font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
+  color: var(--text-primary);
 }
 
 .input-wrapper {
@@ -262,38 +296,46 @@ body {
   align-items: center;
 }
 
-.input-wrapper i {
+.input-wrapper i.input-icon {
   position: absolute;
-  left: 16px;
-  color: var(--text-muted);
+  left: 14px;
   font-size: 15px;
-  z-index: 1;
+  color: var(--text-muted);
+  transition: var(--transition);
+  pointer-events: none;
 }
 
 .input-wrapper input {
   width: 100%;
-  padding: 14px 16px 14px 46px;
+  padding: 12px 14px 12px 42px;
   border: 2px solid var(--border);
-  border-radius: 12px;
+  border-radius: 10px;
   font-size: 14px;
+  color: var(--text-primary);
   transition: var(--transition);
-  background: #F7FAFC;
-}
-
-.input-wrapper input:focus {
   outline: none;
-  border-color: var(--primary-light);
-  box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.1);
+  font-family: inherit;
   background: var(--bg-white);
 }
 
-.input-wrapper input::placeholder {
-  color: #CBD5E0;
+.input-wrapper input:focus {
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.12);
 }
 
-.toggle-pwd {
+.input-wrapper input:focus + i.input-icon,
+.input-wrapper input:focus ~ i.input-icon {
+  color: var(--primary);
+}
+
+.input-wrapper input.error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 4px rgba(229, 62, 62, 0.1);
+}
+
+.input-wrapper .btn-toggle-pwd {
   position: absolute;
-  right: 16px;
+  right: 14px;
   background: none;
   border: none;
   color: var(--text-muted);
@@ -303,190 +345,305 @@ body {
   transition: var(--transition);
 }
 
-.toggle-pwd:hover {
-  color: var(--primary);
+.input-wrapper .btn-toggle-pwd:hover {
+  color: var(--text-primary);
 }
 
-/* 选项行 */
+.error-msg {
+  font-size: 12px;
+  color: var(--danger);
+  display: none;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.error-msg.show {
+  display: flex;
+}
+
+/* 验证码行 */
+.captcha-row {
+  display: flex;
+  gap: 12px;
+}
+
+.captcha-row .input-wrapper {
+  flex: 1;
+}
+
+.captcha-box {
+  width: 120px;
+  height: 46px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #E2E8F0, #CBD5E0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+
+.captcha-box:hover {
+  transform: scale(1.02);
+}
+
+.captcha-box canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.captcha-refresh {
+  position: absolute;
+  bottom: 2px;
+  right: 6px;
+  font-size: 10px;
+  color: rgba(0,0,0,0.3);
+}
+
+/* 记住密码 & 忘记密码 */
 .form-options {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 28px;
+  justify-content: space-between;
 }
 
-.remember {
+.remember-me {
   display: flex;
   align-items: center;
   gap: 8px;
+  cursor: pointer;
   font-size: 13px;
   color: var(--text-secondary);
-  cursor: pointer;
 }
 
-.remember input {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--primary);
+.remember-me input[type="checkbox"] {
+  display: none;
 }
 
-.forgot {
+.remember-me .custom-check {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.remember-me input:checked + .custom-check {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.remember-me input:checked + .custom-check::after {
+  content: '✓';
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.forgot-pwd {
   font-size: 13px;
   color: var(--primary);
   text-decoration: none;
-  font-weight: 500;
+  transition: var(--transition);
 }
 
-.forgot:hover {
+.forgot-pwd:hover {
+  color: var(--primary-dark);
   text-decoration: underline;
 }
 
 /* 登录按钮 */
 .btn-login {
   width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: #FFFFFF;
+  padding: 13px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
+  border-radius: 10px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 4px 15px rgba(43, 108, 176, 0.3);
-  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-login:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(43, 108, 176, 0.4);
+  box-shadow: 0 6px 20px rgba(43, 108, 176, 0.4);
 }
 
 .btn-login:active {
   transform: translateY(0);
 }
 
-/* 错误提示 */
-.login-error {
+.btn-login.loading {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.btn-login .spinner {
   display: none;
-  align-items: center;
-  gap: 8px;
-  margin-top: 14px;
-  padding: 10px 14px;
-  background: #FFF5F5;
-  border: 1px solid #FED7D7;
-  border-radius: 8px;
-  font-size: 13px;
-  color: var(--danger);
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
 }
 
-.login-error.show {
+.btn-login.loading .spinner {
+  display: block;
+}
+
+.btn-login.loading .btn-text {
+  display: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 分割线 */
+.divider {
   display: flex;
-}
-
-/* 快捷登录 */
-.demo-section {
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-}
-
-.demo-section h4 {
-  font-size: 12px;
-  font-weight: 600;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0;
   color: var(--text-muted);
-  margin-bottom: 14px;
+  font-size: 12px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* 第三方登录 */
+.third-party-login {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.btn-third-party {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-white);
   display: flex;
   align-items: center;
-  gap: 6px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.demo-section h4 i {
-  color: var(--primary-light);
-}
-
-.demo-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.demo-btn {
-  padding: 10px 12px;
-  background: #F7FAFC;
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
+  justify-content: center;
   cursor: pointer;
   transition: var(--transition);
+  font-size: 20px;
+}
+
+.btn-third-party:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.btn-third-party.wechat { color: #07C160; }
+.btn-third-party.wechat:hover { background: #07C160; color: white; border-color: #07C160; }
+.btn-third-party.dingtalk { color: #0082EF; }
+.btn-third-party.dingtalk:hover { background: #0082EF; color: white; border-color: #0082EF; }
+.btn-third-party.sso { color: var(--primary); }
+.btn-third-party.sso:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+.third-party-label {
+  text-align: center;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.third-party-label span {
+  width: 48px;
+  font-size: 11px;
+  color: var(--text-muted);
   text-align: center;
 }
 
-.demo-btn:hover {
-  border-color: var(--primary-light);
-  background: var(--primary-bg);
-  transform: translateY(-1px);
-}
-
-.demo-btn .role {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-  display: block;
-  margin-bottom: 2px;
-}
-
-.demo-btn .cred {
-  font-size: 11px;
-  color: var(--text-muted);
-  display: block;
-}
-
-/* 底部 */
+/* 底部版权 */
 .login-footer {
-  margin-top: 36px;
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  right: 0;
   text-align: center;
   font-size: 12px;
   color: var(--text-muted);
 }
 
-.login-footer a {
-  color: var(--primary);
-  text-decoration: none;
-}
-
-/* Toast */
-.toast-box {
+/* ============================================
+   Toast
+   ============================================ */
+.toast-container {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
+  top: 24px;
+  right: 24px;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .toast {
-  padding: 14px 20px;
-  background: var(--bg-white);
-  border-radius: 12px;
-  box-shadow: var(--shadow-lg);
-  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 10px;
-  animation: slideIn 0.3s ease;
+  padding: 14px 20px;
+  background: var(--bg-white);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lg);
+  font-size: 13px;
+  color: var(--text-primary);
+  animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   border-left: 4px solid var(--primary);
+  min-width: 280px;
 }
 
 .toast.success { border-left-color: #38A169; }
 .toast.success i { color: #38A169; }
 .toast.error { border-left-color: var(--danger); }
 .toast.error i { color: var(--danger); }
-.toast.info { border-left-color: var(--primary); }
-.toast.info i { color: var(--primary); }
 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(30px); }
+.toast-out { animation: toastOut 0.3s ease forwards; }
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(60px); }
   to { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(60px); }
+}
+
+/* ============================================
+   响应式
+   ============================================ */
+@media (max-width: 1024px) {
+  .login-brand { display: none; }
+  .login-panel { width: 100%; }
 }
 </style>
 </head>
@@ -498,197 +655,483 @@ body {
     <div class="shape"></div>
     <div class="shape"></div>
     <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
   </div>
-
   <div class="brand-content">
     <div class="brand-logo">
-      <img src="logo.png" alt="捷顺科技">
+      <div class="brand-logo-icon">
+        <i class="fas fa-database"></i>
+      </div>
+      <div class="brand-logo-text">中台支撑资源库</div>
     </div>
-    <h1 class="brand-title">中台支撑资源库</h1>
-    <p class="brand-subtitle">统一管理产品资料、技术文档、解决方案<br>赋能营销、项目、交付全流程</p>
-
-    <div class="features">
-      <div class="feature-item">
-        <div class="feature-icon"><i class="fas fa-sitemap"></i></div>
-        <div class="feature-text">
+    <p class="brand-desc">统一管理产品资料、技术文档、解决方案<br>赋能营销、项目、交付全流程</p>
+    <div class="brand-features">
+      <div class="brand-feature">
+        <i class="fas fa-folder-tree"></i>
+        <div class="brand-feature-text">
           <h4>多维分类管理</h4>
-          <p>产品线 · 书架 · 类别<br>三维度精准定位</p>
+          <p>硬件 / 软件 / 方案 / 培训，层级清晰</p>
         </div>
       </div>
-      <div class="feature-item">
-        <div class="feature-icon"><i class="fas fa-cloud-arrow-up"></i></div>
-        <div class="feature-text">
+      <div class="brand-feature">
+        <i class="fas fa-cloud-arrow-up"></i>
+        <div class="brand-feature-text">
           <h4>便捷资源上传</h4>
-          <p>拖拽上传 · 批量导入<br>自动识别文件类型</p>
+          <p>拖拽上传，自动归档，版本管理</p>
         </div>
       </div>
-      <div class="feature-item">
-        <div class="feature-icon"><i class="fas fa-magnifying-glass"></i></div>
-        <div class="feature-text">
+      <div class="brand-feature">
+        <i class="fas fa-magnifying-glass"></i>
+        <div class="brand-feature-text">
           <h4>智能检索筛选</h4>
-          <p>全文搜索 · 标签筛选<br>快速找到所需资料</p>
+          <p>全文搜索，多条件组合筛选，快速定位</p>
         </div>
       </div>
-      <div class="feature-item">
-        <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
-        <div class="feature-text">
+      <div class="brand-feature">
+        <i class="fas fa-shield-halved"></i>
+        <div class="brand-feature-text">
           <h4>权限安全管控</h4>
-          <p>角色权限 · 操作日志<br>资源安全有保障</p>
+          <p>角色权限控制，操作日志审计</p>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="brand-footer">
-    © 2026 捷顺科技 JIESHUN TECHNOLOGY · 中台支撑资源库
   </div>
 </div>
 
 <!-- 右侧登录区 -->
-<div class="login-section">
-  <div class="login-header">
-    <h2>欢迎登录</h2>
-    <p>请输入您的账号和密码访问资源库</p>
-  </div>
+<div class="login-panel">
+  <div class="login-box">
+    <div class="login-header">
+      <h2>欢迎登录</h2>
+      <p>请输入您的账号信息进入资源管理平台</p>
+    </div>
 
-  <form id="loginForm" onsubmit="return false;">
-    <div class="form-group">
-      <label>账号</label>
-      <div class="input-wrapper">
-        <i class="fas fa-user"></i>
-        <input type="text" id="username" placeholder="请输入用户名" autocomplete="username">
-      </div>
+    <!-- 登录方式切换 -->
+    <div class="login-tabs">
+      <div class="login-tab active" data-tab="account">账号密码登录</div>
+      <div class="login-tab" data-tab="phone">手机验证码登录</div>
     </div>
-    <div class="form-group">
-      <label>密码</label>
-      <div class="input-wrapper">
-        <i class="fas fa-lock"></i>
-        <input type="password" id="password" placeholder="请输入密码" autocomplete="current-password">
-        <button type="button" class="toggle-pwd" onclick="togglePwd()"><i class="fas fa-eye"></i></button>
-      </div>
-    </div>
-    <div class="form-options">
-      <label class="remember"><input type="checkbox" id="remember" checked> 记住我</label>
-      <a href="#" class="forgot" onclick="showToast('info','请联系管理员重置密码')">忘记密码？</a>
-    </div>
-    <button type="submit" class="btn-login" onclick="handleLogin()">登 录</button>
-    <div class="login-error" id="loginError">
-      <i class="fas fa-exclamation-circle"></i>
-      <span id="errorMsg"></span>
-    </div>
-  </form>
 
-  <div class="demo-section">
-    <h4><i class="fas fa-key"></i> 快捷登录</h4>
-    <div class="demo-grid">
-      <div class="demo-btn" onclick="quickLogin('admin','admin123')">
-        <span class="role">超级管理员</span>
-        <span class="cred">admin / admin123</span>
+    <!-- 账号密码登录表单 -->
+    <form class="login-form" id="accountForm">
+      <div class="form-group">
+        <label>账号</label>
+        <div class="input-wrapper">
+          <input type="text" id="username" placeholder="请输入用户名 / 工号 / 邮箱" autocomplete="username">
+          <i class="input-icon fas fa-user"></i>
+        </div>
+        <div class="error-msg" id="usernameError">
+          <i class="fas fa-exclamation-circle"></i> <span>请输入账号</span>
+        </div>
       </div>
-      <div class="demo-btn" onclick="quickLogin('manager','manager123')">
-        <span class="role">资源管理员</span>
-        <span class="cred">manager / manager123</span>
+      <div class="form-group">
+        <label>密码</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" placeholder="请输入密码" autocomplete="current-password">
+          <i class="input-icon fas fa-lock"></i>
+          <button type="button" class="btn-toggle-pwd" id="btnTogglePwd">
+            <i class="fas fa-eye-slash"></i>
+          </button>
+        </div>
+        <div class="error-msg" id="passwordError">
+          <i class="fas fa-exclamation-circle"></i> <span>请输入密码</span>
+        </div>
       </div>
-      <div class="demo-btn" onclick="quickLogin('editor','editor123')">
-        <span class="role">内容编辑</span>
-        <span class="cred">editor / editor123</span>
+      <div class="form-group">
+        <label>验证码</label>
+        <div class="captcha-row">
+          <div class="input-wrapper">
+            <input type="text" id="captcha" placeholder="请输入验证码" maxlength="4" autocomplete="off">
+            <i class="input-icon fas fa-shield-halved"></i>
+          </div>
+          <div class="captcha-box" id="captchaBox" title="点击刷新验证码">
+            <canvas id="captchaCanvas" width="120" height="46"></canvas>
+            <span class="captcha-refresh">点击刷新</span>
+          </div>
+        </div>
+        <div class="error-msg" id="captchaError">
+          <i class="fas fa-exclamation-circle"></i> <span>请输入正确的验证码</span>
+        </div>
       </div>
-      <div class="demo-btn" onclick="quickLogin('viewer','viewer123')">
-        <span class="role">普通用户</span>
-        <span class="cred">viewer / viewer123</span>
+      <div class="form-options">
+        <label class="remember-me">
+          <input type="checkbox" id="rememberMe" checked>
+          <span class="custom-check"></span>
+          记住我
+        </label>
+        <a href="javascript:void(0)" class="forgot-pwd" id="forgotPwd">忘记密码？</a>
       </div>
+      <button type="submit" class="btn-login" id="btnLogin">
+        <span class="btn-text">登 录</span>
+        <div class="spinner"></div>
+      </button>
+    </form>
+
+    <!-- 手机验证码登录表单 -->
+    <form class="login-form" id="phoneForm" style="display:none;">
+      <div class="form-group">
+        <label>手机号</label>
+        <div class="input-wrapper">
+          <input type="tel" id="phone" placeholder="请输入手机号" maxlength="11" autocomplete="tel">
+          <i class="input-icon fas fa-mobile-screen"></i>
+        </div>
+        <div class="error-msg" id="phoneError">
+          <i class="fas fa-exclamation-circle"></i> <span>请输入正确的手机号</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>验证码</label>
+        <div class="captcha-row">
+          <div class="input-wrapper">
+            <input type="text" id="smsCode" placeholder="请输入短信验证码" maxlength="6" autocomplete="one-time-code">
+            <i class="input-icon fas fa-message"></i>
+          </div>
+          <button type="button" class="btn-login" id="btnSendSms" style="width:120px;padding:12px;font-size:13px;flex-shrink:0;">
+            <span class="btn-text">获取验证码</span>
+          </button>
+        </div>
+        <div class="error-msg" id="smsError">
+          <i class="fas fa-exclamation-circle"></i> <span>请输入验证码</span>
+        </div>
+      </div>
+      <button type="submit" class="btn-login" id="btnPhoneLogin">
+        <span class="btn-text">登 录</span>
+        <div class="spinner"></div>
+      </button>
+    </form>
+
+    <div class="divider">其他登录方式</div>
+
+    <div class="third-party-login">
+      <button class="btn-third-party wechat" title="企业微信登录">
+        <i class="fab fa-weixin"></i>
+      </button>
+      <button class="btn-third-party dingtalk" title="钉钉登录">
+        <i class="fas fa-comment-dots"></i>
+      </button>
+      <button class="btn-third-party sso" title="SSO单点登录">
+        <i class="fas fa-key"></i>
+      </button>
+    </div>
+    <div class="third-party-label">
+      <span>企业微信</span>
+      <span>钉钉</span>
+      <span>SSO</span>
     </div>
   </div>
 
   <div class="login-footer">
-    <p>© 2026 <a href="#">捷顺科技 JIESHUN TECHNOLOGY</a></p>
+    &copy; 2026 中台支撑资源库 · 技术支持部 · v1.0.0
   </div>
 </div>
 
-<div class="toast-box" id="toastBox"></div>
+<div class="toast-container" id="toastContainer"></div>
 
 <script>
-const USERS = {
-  admin:    { password: 'admin123',   name: '系统管理员', role: '超级管理员' },
-  manager:  { password: 'manager123', name: '张经理',     role: '资源管理员' },
-  editor:   { password: 'editor123',  name: '李编辑',     role: '内容编辑' },
-  viewer:   { password: 'viewer123',  name: '王工程师',   role: '普通用户' },
-};
+// ==========================================
+// 预设账号（模拟后台用户数据）
+// ==========================================
+const USERS = [
+  { username: 'admin',    password: 'admin123',   role: '超级管理员', name: '系统管理员', phone: '13800000001' },
+  { username: 'manager',  password: 'manager123', role: '资源管理员', name: '张经理',     phone: '13800000002' },
+  { username: 'editor',   password: 'editor123',  role: '内容编辑',   name: '李编辑',     phone: '13800000003' },
+  { username: 'viewer',   password: 'viewer123',  role: '普通用户',   name: '王工程师',   phone: '13800000004' },
+];
 
-function handleLogin() {
-  const u = document.getElementById('username').value.trim();
-  const p = document.getElementById('password').value;
-  const errEl = document.getElementById('loginError');
-  const errMsg = document.getElementById('errorMsg');
+// ==========================================
+// 验证码
+// ==========================================
+let currentCaptcha = '';
 
-  if (!u || !p) {
-    errEl.classList.add('show');
-    errMsg.textContent = '请输入账号和密码';
-    return;
+function generateCaptcha() {
+  const canvas = document.getElementById('captchaCanvas');
+  const ctx = canvas.getContext('2d');
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  currentCaptcha = '';
+
+  // 背景
+  ctx.fillStyle = '#E2E8F0';
+  ctx.fillRect(0, 0, 120, 46);
+
+  // 干扰线
+  for (let i = 0; i < 4; i++) {
+    ctx.beginPath();
+    ctx.moveTo(Math.random() * 120, Math.random() * 46);
+    ctx.lineTo(Math.random() * 120, Math.random() * 46);
+    ctx.strokeStyle = `rgba(${Math.random()*150},${Math.random()*150},${Math.random()*150},0.4)`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
   }
 
-  const user = USERS[u];
-  if (!user || user.password !== p) {
-    errEl.classList.add('show');
-    errMsg.textContent = '账号或密码错误，请重试';
-    return;
+  // 干扰点
+  for (let i = 0; i < 30; i++) {
+    ctx.fillStyle = `rgba(${Math.random()*200},${Math.random()*200},${Math.random()*200},0.5)`;
+    ctx.fillRect(Math.random() * 120, Math.random() * 46, 2, 2);
   }
 
-  errEl.classList.remove('show');
-  localStorage.setItem('resourceCenter_user', JSON.stringify({
-    username: u,
-    name: user.name,
-    role: user.role
-  }));
-
-  showToast('success', '登录成功，正在跳转...');
-  setTimeout(function() {
-    window.location.href = 'index.html';
-  }, 800);
-}
-
-function quickLogin(u, p) {
-  document.getElementById('username').value = u;
-  document.getElementById('password').value = p;
-  handleLogin();
-}
-
-function togglePwd() {
-  const inp = document.getElementById('password');
-  const icon = document.querySelector('.toggle-pwd i');
-  if (inp.type === 'password') {
-    inp.type = 'text';
-    icon.className = 'fas fa-eye-slash';
-  } else {
-    inp.type = 'password';
-    icon.className = 'fas fa-eye';
+  // 字符
+  for (let i = 0; i < 4; i++) {
+    const char = chars[Math.floor(Math.random() * chars.length)];
+    currentCaptcha += char;
+    ctx.font = `bold ${18 + Math.random() * 6}px Arial`;
+    ctx.fillStyle = `rgb(${Math.random()*80},${Math.random()*80},${Math.random()*120 + 50})`;
+    ctx.save();
+    ctx.translate(22 + i * 24, 28 + Math.random() * 8 - 4);
+    ctx.rotate((Math.random() - 0.5) * 0.4);
+    ctx.fillText(char, 0, 0);
+    ctx.restore();
   }
 }
 
-function showToast(type, msg) {
-  const box = document.getElementById('toastBox');
-  const icons = { success: 'fas fa-check-circle', error: 'fas fa-times-circle', info: 'fas fa-info-circle' };
-  const t = document.createElement('div');
-  t.className = 'toast ' + type;
-  t.innerHTML = '<i class="' + (icons[type] || icons.info) + '"></i><span>' + msg + '</span>';
-  box.appendChild(t);
-  setTimeout(function() {
-    t.style.opacity = '0';
-    t.style.transform = 'translateX(30px)';
-    setTimeout(function() { t.remove(); }, 300);
-  }, 2500);
-}
+document.getElementById('captchaBox').addEventListener('click', generateCaptcha);
 
-// 回车登录
-document.getElementById('password').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') handleLogin();
+// ==========================================
+// 登录方式切换
+// ==========================================
+document.querySelectorAll('.login-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    
+    const isAccount = tab.dataset.tab === 'account';
+    document.getElementById('accountForm').style.display = isAccount ? 'flex' : 'none';
+    document.getElementById('phoneForm').style.display = isAccount ? 'none' : 'flex';
+    clearErrors();
+  });
 });
 
-// 自动登录检测
-(function() {
-  const u = localStorage.getItem('resourceCenter_user');
-  if (u) window.location.href = 'index.html';
-})();
+// ==========================================
+// 密码显示/隐藏
+// ==========================================
+document.getElementById('btnTogglePwd').addEventListener('click', function() {
+  const pwdInput = document.getElementById('password');
+  const icon = this.querySelector('i');
+  if (pwdInput.type === 'password') {
+    pwdInput.type = 'text';
+    icon.className = 'fas fa-eye';
+  } else {
+    pwdInput.type = 'password';
+    icon.className = 'fas fa-eye-slash';
+  }
+});
+
+// ==========================================
+// 账号密码登录
+// ==========================================
+document.getElementById('accountForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  clearErrors();
+
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const captcha = document.getElementById('captcha').value.trim();
+  let hasError = false;
+
+  if (!username) {
+    showFieldError('username', 'usernameError', '请输入账号');
+    hasError = true;
+  }
+  if (!password) {
+    showFieldError('password', 'passwordError', '请输入密码');
+    hasError = true;
+  }
+  if (!captcha) {
+    showFieldError('captcha', 'captchaError', '请输入验证码');
+    hasError = true;
+  } else if (captcha.toLowerCase() !== currentCaptcha.toLowerCase()) {
+    showFieldError('captcha', 'captchaError', '验证码错误，请重新输入');
+    generateCaptcha();
+    hasError = true;
+  }
+
+  if (hasError) return;
+
+  // 验证账号密码
+  const user = USERS.find(u => 
+    (u.username === username || u.phone === username) && u.password === password
+  );
+
+  const btn = document.getElementById('btnLogin');
+  btn.classList.add('loading');
+
+  setTimeout(() => {
+    btn.classList.remove('loading');
+    if (user) {
+      // 登录成功 - 存储用户信息
+      const sessionData = {
+        username: user.username,
+        name: user.name,
+        role: user.role,
+        loginTime: new Date().toISOString()
+      };
+      localStorage.setItem('resourceCenter_user', JSON.stringify(sessionData));
+
+      if (document.getElementById('rememberMe').checked) {
+        localStorage.setItem('resourceCenter_remember', username);
+      } else {
+        localStorage.removeItem('resourceCenter_remember');
+      }
+
+      showToast('success', `欢迎回来，${user.name}（${user.role}）`);
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1000);
+    } else {
+      showToast('error', '账号或密码错误，请重新输入');
+      showFieldError('password', 'passwordError', '账号或密码错误');
+      generateCaptcha();
+      document.getElementById('captcha').value = '';
+    }
+  }, 1200);
+});
+
+// ==========================================
+// 手机验证码登录
+// ==========================================
+let smsCountdown = 0;
+
+document.getElementById('btnSendSms').addEventListener('click', function() {
+  const phone = document.getElementById('phone').value.trim();
+  if (!/^1[3-9]\d{9}$/.test(phone)) {
+    showFieldError('phone', 'phoneError', '请输入正确的手机号');
+    return;
+  }
+
+  if (smsCountdown > 0) return;
+
+  showToast('success', `验证码已发送至 ${phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}（模拟验证码: 123456）`);
+  
+  smsCountdown = 60;
+  const btn = this;
+  const btnText = btn.querySelector('.btn-text');
+  const timer = setInterval(() => {
+    smsCountdown--;
+    btnText.textContent = `${smsCountdown}s`;
+    if (smsCountdown <= 0) {
+      clearInterval(timer);
+      btnText.textContent = '获取验证码';
+    }
+  }, 1000);
+});
+
+document.getElementById('phoneForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  clearErrors();
+
+  const phone = document.getElementById('phone').value.trim();
+  const smsCode = document.getElementById('smsCode').value.trim();
+  let hasError = false;
+
+  if (!/^1[3-9]\d{9}$/.test(phone)) {
+    showFieldError('phone', 'phoneError', '请输入正确的手机号');
+    hasError = true;
+  }
+  if (!smsCode) {
+    showFieldError('smsCode', 'smsError', '请输入验证码');
+    hasError = true;
+  }
+
+  if (hasError) return;
+
+  const btn = document.getElementById('btnPhoneLogin');
+  btn.classList.add('loading');
+
+  setTimeout(() => {
+    btn.classList.remove('loading');
+    if (smsCode === '123456') {
+      const user = USERS.find(u => u.phone === phone) || { name: '用户', role: '普通用户', username: phone };
+      const sessionData = {
+        username: user.username,
+        name: user.name,
+        role: user.role,
+        loginTime: new Date().toISOString()
+      };
+      localStorage.setItem('resourceCenter_user', JSON.stringify(sessionData));
+      showToast('success', `登录成功，欢迎 ${user.name}`);
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1000);
+    } else {
+      showToast('error', '验证码错误');
+      showFieldError('smsCode', 'smsError', '验证码错误，请重新输入');
+    }
+  }, 1200);
+});
+
+// ==========================================
+// 忘记密码
+// ==========================================
+document.getElementById('forgotPwd').addEventListener('click', () => {
+  showToast('success', '请联系管理员重置密码：admin@company.com');
+});
+
+// ==========================================
+// 工具函数
+// ==========================================
+function showFieldError(inputId, errorId, msg) {
+  const input = document.getElementById(inputId);
+  const error = document.getElementById(errorId);
+  input.classList.add('error');
+  error.querySelector('span').textContent = msg;
+  error.classList.add('show');
+  // 抖动效果
+  input.style.animation = 'shake 0.4s ease';
+  setTimeout(() => input.style.animation = '', 400);
+}
+
+function clearErrors() {
+  document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
+  document.querySelectorAll('input.error').forEach(el => el.classList.remove('error'));
+}
+
+function showToast(type, message) {
+  const container = document.getElementById('toastContainer');
+  const icons = { success: 'fas fa-check-circle', error: 'fas fa-times-circle' };
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<i class="${icons[type]}"></i> <span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('toast-out');
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+// 抖动动画
+const shakeStyle = document.createElement('style');
+shakeStyle.textContent = `
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}`;
+document.head.appendChild(shakeStyle);
+
+// ==========================================
+// 初始化
+// ==========================================
+window.addEventListener('DOMContentLoaded', () => {
+  generateCaptcha();
+
+  // 自动填充记住的账号
+  const remembered = localStorage.getItem('resourceCenter_remember');
+  if (remembered) {
+    document.getElementById('username').value = remembered;
+    document.getElementById('password').focus();
+  } else {
+    document.getElementById('username').focus();
+  }
+
+  // 如果已登录，直接跳转
+  const user = localStorage.getItem('resourceCenter_user');
+  if (user) {
+    window.location.href = 'index.html';
+  }
+});
 </script>
 </body>
 </html>
