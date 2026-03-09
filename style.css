@@ -93,7 +93,7 @@ body {
   color: inherit;
 }
 
-.logo-icon { flex-shrink: 0; }
+.logo-icon { flex-shrink: 0; height: 36px; }
 
 .logo-text { display: flex; flex-direction: column; line-height: 1.2; }
 
