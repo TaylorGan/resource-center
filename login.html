@@ -7,111 +7,550 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
 :root {
-  --brand-blue:#003399;--brand-red:#E63926;--brand-cyan:#00A0E9;
-  --primary:#3B82F6;--primary-dark:#2563EB;--primary-bg:#EFF6FF;
-  --danger:#EF4444;--bg-body:#F8FAFC;--bg-white:#FFF;--border:#E2E8F0;
-  --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
-  --shadow-lg:0 10px 40px rgba(0,0,0,0.08);--transition:all 0.25s ease;
+  --primary: #2B6CB0;
+  --primary-light: #4299E1;
+  --primary-dark: #1A4E8A;
+  --primary-bg: #EBF4FF;
+  --danger: #E53E3E;
+  --bg-body: #F0F4F8;
+  --bg-white: #FFFFFF;
+  --border: #E2E8F0;
+  --text-primary: #1A202C;
+  --text-secondary: #4A5568;
+  --text-muted: #A0AEC0;
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.1);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;min-height:100vh;display:flex;background:var(--bg-body);overflow:hidden}
 
-/* 左侧品牌区 */
-.login-brand{flex:1;background:linear-gradient(135deg,#0F172A 0%,#1E3A5F 40%,#3B82F6 100%);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px;position:relative;overflow:hidden}
-.login-brand::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 50%,rgba(59,130,246,0.15) 0%,transparent 50%),radial-gradient(circle at 70% 80%,rgba(0,160,233,0.1) 0%,transparent 40%);animation:bgFloat 20s ease-in-out infinite}
-@keyframes bgFloat{0%,100%{transform:translate(0,0)}33%{transform:translate(30px,-30px)}66%{transform:translate(-20px,20px)}}
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
 
-.floating-shapes{position:absolute;width:100%;height:100%;top:0;left:0;pointer-events:none}
-.shape{position:absolute;border-radius:50%;opacity:0.06;animation:float 15s ease-in-out infinite}
-.shape:nth-child(1){width:200px;height:200px;background:#3B82F6;top:10%;left:10%;animation-delay:0s}
-.shape:nth-child(2){width:150px;height:150px;background:#00A0E9;top:60%;right:10%;animation-delay:-5s}
-.shape:nth-child(3){width:100px;height:100px;background:#E63926;bottom:20%;left:30%;animation-delay:-10s}
-@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  background: var(--bg-body);
+  overflow: hidden;
+}
 
-.brand-content{position:relative;z-index:1;text-align:center;max-width:400px}
-.brand-logo{margin-bottom:32px}
-.brand-logo svg{filter:drop-shadow(0 4px 12px rgba(0,0,0,0.2))}
-.brand-logo-text{margin-top:12px}
-.brand-logo-text .cn{font-size:28px;font-weight:800;color:#FFF;letter-spacing:3px;display:block}
-.brand-logo-text .en{font-size:12px;color:rgba(255,255,255,0.5);letter-spacing:2px;font-weight:400;display:block;margin-top:4px}
-.brand-tagline{font-size:18px;font-weight:300;color:rgba(255,255,255,0.85);line-height:1.6;margin-bottom:32px}
-.brand-features{display:flex;gap:24px;justify-content:center}
-.feature{text-align:center;color:rgba(255,255,255,0.7)}
-.feature i{font-size:24px;margin-bottom:8px;display:block;color:rgba(255,255,255,0.5)}
-.feature span{font-size:12px;font-weight:500}
+/* ============================================
+   左侧品牌区
+   ============================================ */
+.login-brand {
+  flex: 1;
+  background: linear-gradient(135deg, #1A365D 0%, #2B6CB0 50%, #4299E1 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px;
+  position: relative;
+  overflow: hidden;
+}
 
-/* 右侧登录 */
-.login-form-section{width:480px;display:flex;flex-direction:column;justify-content:center;padding:60px;background:var(--bg-white)}
-.login-header{margin-bottom:36px}
-.login-header h2{font-size:24px;font-weight:800;color:var(--text-primary);margin-bottom:6px}
-.login-header p{font-size:14px;color:var(--text-muted)}
-.form-group{margin-bottom:20px}
-.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:8px}
-.input-wrapper{position:relative;display:flex;align-items:center}
-.input-wrapper i{position:absolute;left:14px;color:var(--text-muted);font-size:14px;z-index:1}
-.input-wrapper input{width:100%;padding:12px 14px 12px 42px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;transition:var(--transition);background:var(--bg-body)}
-.input-wrapper input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(59,130,246,0.1);background:var(--bg-white)}
-.input-wrapper .toggle-pwd{position:absolute;right:14px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px}
-.form-options{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;font-size:13px}
-.remember{display:flex;align-items:center;gap:6px;color:var(--text-secondary);cursor:pointer}
-.remember input{accent-color:var(--primary);width:15px;height:15px}
-.forgot{color:var(--primary);text-decoration:none;font-weight:500}
-.forgot:hover{text-decoration:underline}
-.btn-login{width:100%;padding:13px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#FFF;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:var(--transition);box-shadow:0 4px 12px rgba(59,130,246,0.25)}
-.btn-login:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(59,130,246,0.35)}
-.btn-login:active{transform:translateY(0)}
-.login-error{color:var(--danger);font-size:12px;margin-top:10px;display:none;align-items:center;gap:6px}
-.login-error.show{display:flex}
-.login-footer{margin-top:40px;text-align:center}
-.login-footer p{font-size:12px;color:var(--text-muted)}
-.login-footer a{color:var(--primary);text-decoration:none;font-weight:500}
+.login-brand::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.08) 0%, transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(255,255,255,0.05) 0%, transparent 40%);
+  animation: bgFloat 20s ease-in-out infinite;
+}
 
-.demo-accounts{margin-top:24px;padding:16px;background:var(--bg-body);border-radius:10px;border:1px solid var(--border)}
-.demo-accounts h4{font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.demo-accounts h4 i{color:var(--primary)}
-.demo-row{display:flex;gap:8px;margin-bottom:6px}
-.demo-row:last-child{margin-bottom:0}
-.demo-btn{flex:1;padding:8px;background:var(--bg-white);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:var(--transition);text-align:center}
-.demo-btn:hover{border-color:var(--primary);background:var(--primary-bg)}
-.demo-btn .role{font-size:12px;font-weight:600;color:var(--text-primary);display:block}
-.demo-btn .cred{font-size:10px;color:var(--text-muted);display:block;margin-top:2px}
+@keyframes bgFloat {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(30px, -30px) rotate(2deg); }
+  66% { transform: translate(-20px, 20px) rotate(-1deg); }
+}
 
-.toast-box{position:fixed;top:20px;right:20px;z-index:9999}
-.toast{padding:12px 18px;background:var(--bg-white);border-radius:10px;box-shadow:var(--shadow-lg);font-size:13px;display:flex;align-items:center;gap:8px;animation:slideIn 0.3s ease;border-left:3px solid var(--primary)}
-.toast.success{border-left-color:#10B981}
-.toast.success i{color:#10B981}
-.toast.error{border-left-color:var(--danger)}
-.toast.error i{color:var(--danger)}
-@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+/* 浮动装饰元素 */
+.floating-shapes {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.06;
+  animation: float 15s ease-in-out infinite;
+}
+
+.shape:nth-child(1) {
+  width: 300px;
+  height: 300px;
+  background: #4299E1;
+  top: -5%;
+  left: -5%;
+  animation-delay: 0s;
+}
+
+.shape:nth-child(2) {
+  width: 200px;
+  height: 200px;
+  background: #63B3ED;
+  bottom: 10%;
+  right: -5%;
+  animation-delay: -5s;
+}
+
+.shape:nth-child(3) {
+  width: 150px;
+  height: 150px;
+  background: #90CDF4;
+  top: 40%;
+  left: 30%;
+  animation-delay: -10s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-30px) scale(1.05); }
+}
+
+/* 品牌内容 */
+.brand-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 420px;
+}
+
+.brand-logo {
+  margin-bottom: 40px;
+}
+
+.brand-logo img {
+  height: 56px;
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+
+.brand-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.brand-subtitle {
+  font-size: 15px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 48px;
+  line-height: 1.6;
+}
+
+/* 功能特性 */
+.features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  text-align: left;
+}
+
+.feature-item {
+  display: flex;
+  gap: 14px;
+  padding: 18px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: var(--transition);
+}
+
+.feature-item:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
+}
+
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.feature-icon i {
+  font-size: 16px;
+  color: rgba(255,255,255,0.85);
+}
+
+.feature-text h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 3px;
+}
+
+.feature-text p {
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.4;
+}
+
+/* 底部版权 */
+.brand-footer {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  z-index: 1;
+}
+
+/* ============================================
+   右侧登录区
+   ============================================ */
+.login-section {
+  width: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 56px;
+  background: var(--bg-white);
+  box-shadow: -10px 0 40px rgba(0,0,0,0.05);
+}
+
+.login-header {
+  margin-bottom: 36px;
+}
+
+.login-header h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.login-header p {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* 表单 */
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper i {
+  position: absolute;
+  left: 16px;
+  color: var(--text-muted);
+  font-size: 15px;
+  z-index: 1;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 14px 16px 14px 46px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-size: 14px;
+  transition: var(--transition);
+  background: #F7FAFC;
+}
+
+.input-wrapper input:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.1);
+  background: var(--bg-white);
+}
+
+.input-wrapper input::placeholder {
+  color: #CBD5E0;
+}
+
+.toggle-pwd {
+  position: absolute;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 15px;
+  padding: 4px;
+  transition: var(--transition);
+}
+
+.toggle-pwd:hover {
+  color: var(--primary);
+}
+
+/* 选项行 */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.remember input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+}
+
+.forgot {
+  font-size: 13px;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot:hover {
+  text-decoration: underline;
+}
+
+/* 登录按钮 */
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(43, 108, 176, 0.3);
+  letter-spacing: 2px;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(43, 108, 176, 0.4);
+}
+
+.btn-login:active {
+  transform: translateY(0);
+}
+
+/* 错误提示 */
+.login-error {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: #FFF5F5;
+  border: 1px solid #FED7D7;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.login-error.show {
+  display: flex;
+}
+
+/* 快捷登录 */
+.demo-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.demo-section h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.demo-section h4 i {
+  color: var(--primary-light);
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.demo-btn {
+  padding: 10px 12px;
+  background: #F7FAFC;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+}
+
+.demo-btn:hover {
+  border-color: var(--primary-light);
+  background: var(--primary-bg);
+  transform: translateY(-1px);
+}
+
+.demo-btn .role {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.demo-btn .cred {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: block;
+}
+
+/* 底部 */
+.login-footer {
+  margin-top: 36px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.login-footer a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* Toast */
+.toast-box {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.toast {
+  padding: 14px 20px;
+  background: var(--bg-white);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideIn 0.3s ease;
+  border-left: 4px solid var(--primary);
+}
+
+.toast.success { border-left-color: #38A169; }
+.toast.success i { color: #38A169; }
+.toast.error { border-left-color: var(--danger); }
+.toast.error i { color: var(--danger); }
+.toast.info { border-left-color: var(--primary); }
+.toast.info i { color: var(--primary); }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
 </style>
 </head>
 <body>
 
+<!-- 左侧品牌区 -->
 <div class="login-brand">
   <div class="floating-shapes">
-    <div class="shape"></div><div class="shape"></div><div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
   </div>
+
   <div class="brand-content">
     <div class="brand-logo">
-      <img src="logo.png" alt="捷顺科技" height="72" style="filter:brightness(0) invert(1);opacity:0.95;">
-      <div class="brand-logo-text">
-        <span class="en">JIESHUN TECHNOLOGY</span>
+      <img src="logo.png" alt="捷顺科技">
+    </div>
+    <h1 class="brand-title">中台支撑资源库</h1>
+    <p class="brand-subtitle">统一管理产品资料、技术文档、解决方案<br>赋能营销、项目、交付全流程</p>
+
+    <div class="features">
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-sitemap"></i></div>
+        <div class="feature-text">
+          <h4>多维分类管理</h4>
+          <p>产品线 · 书架 · 类别<br>三维度精准定位</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+        <div class="feature-text">
+          <h4>便捷资源上传</h4>
+          <p>拖拽上传 · 批量导入<br>自动识别文件类型</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-magnifying-glass"></i></div>
+        <div class="feature-text">
+          <h4>智能检索筛选</h4>
+          <p>全文搜索 · 标签筛选<br>快速找到所需资料</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+        <div class="feature-text">
+          <h4>权限安全管控</h4>
+          <p>角色权限 · 操作日志<br>资源安全有保障</p>
+        </div>
       </div>
     </div>
-    <div class="brand-tagline">中台支撑资源库<br>统一管理 · 高效协同 · 赋能业务</div>
-    <div class="brand-features">
-      <div class="feature"><i class="fas fa-shield-halved"></i><span>安全可靠</span></div>
-      <div class="feature"><i class="fas fa-bolt"></i><span>高效检索</span></div>
-      <div class="feature"><i class="fas fa-users"></i><span>团队协作</span></div>
-    </div>
+  </div>
+
+  <div class="brand-footer">
+    © 2026 捷顺科技 JIESHUN TECHNOLOGY · 中台支撑资源库
   </div>
 </div>
 
-<div class="login-form-section">
+<!-- 右侧登录区 -->
+<div class="login-section">
   <div class="login-header">
     <h2>欢迎登录</h2>
-    <p>请输入账号和密码访问资源库</p>
+    <p>请输入您的账号和密码访问资源库</p>
   </div>
+
   <form id="loginForm" onsubmit="return false;">
     <div class="form-group">
       <label>账号</label>
@@ -133,23 +572,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
       <a href="#" class="forgot" onclick="showToast('info','请联系管理员重置密码')">忘记密码？</a>
     </div>
     <button type="submit" class="btn-login" onclick="handleLogin()">登 录</button>
-    <div class="login-error" id="loginError"><i class="fas fa-exclamation-circle"></i><span id="errorMsg"></span></div>
+    <div class="login-error" id="loginError">
+      <i class="fas fa-exclamation-circle"></i>
+      <span id="errorMsg"></span>
+    </div>
   </form>
 
-  <div class="demo-accounts">
+  <div class="demo-section">
     <h4><i class="fas fa-key"></i> 快捷登录</h4>
-    <div class="demo-row">
-      <div class="demo-btn" onclick="quickLogin('admin','admin123')"><span class="role">超级管理员</span><span class="cred">admin / admin123</span></div>
-      <div class="demo-btn" onclick="quickLogin('manager','manager123')"><span class="role">资源管理员</span><span class="cred">manager / manager123</span></div>
-    </div>
-    <div class="demo-row">
-      <div class="demo-btn" onclick="quickLogin('editor','editor123')"><span class="role">内容编辑</span><span class="cred">editor / editor123</span></div>
-      <div class="demo-btn" onclick="quickLogin('viewer','viewer123')"><span class="role">普通用户</span><span class="cred">viewer / viewer123</span></div>
+    <div class="demo-grid">
+      <div class="demo-btn" onclick="quickLogin('admin','admin123')">
+        <span class="role">超级管理员</span>
+        <span class="cred">admin / admin123</span>
+      </div>
+      <div class="demo-btn" onclick="quickLogin('manager','manager123')">
+        <span class="role">资源管理员</span>
+        <span class="cred">manager / manager123</span>
+      </div>
+      <div class="demo-btn" onclick="quickLogin('editor','editor123')">
+        <span class="role">内容编辑</span>
+        <span class="cred">editor / editor123</span>
+      </div>
+      <div class="demo-btn" onclick="quickLogin('viewer','viewer123')">
+        <span class="role">普通用户</span>
+        <span class="cred">viewer / viewer123</span>
+      </div>
     </div>
   </div>
 
   <div class="login-footer">
-    <p>© 2026 捷顺科技 · <a href="#">JIESHUN TECHNOLOGY</a></p>
+    <p>© 2026 <a href="#">捷顺科技 JIESHUN TECHNOLOGY</a></p>
   </div>
 </div>
 
@@ -157,10 +609,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
 
 <script>
 const USERS = {
-  admin:    { password:'admin123',   name:'系统管理员', role:'超级管理员' },
-  manager:  { password:'manager123', name:'张经理',     role:'资源管理员' },
-  editor:   { password:'editor123',  name:'李编辑',     role:'内容编辑' },
-  viewer:   { password:'viewer123',  name:'王工程师',   role:'普通用户' },
+  admin:    { password: 'admin123',   name: '系统管理员', role: '超级管理员' },
+  manager:  { password: 'manager123', name: '张经理',     role: '资源管理员' },
+  editor:   { password: 'editor123',  name: '李编辑',     role: '内容编辑' },
+  viewer:   { password: 'viewer123',  name: '王工程师',   role: '普通用户' },
 };
 
 function handleLogin() {
@@ -168,13 +620,31 @@ function handleLogin() {
   const p = document.getElementById('password').value;
   const errEl = document.getElementById('loginError');
   const errMsg = document.getElementById('errorMsg');
-  if (!u || !p) { errEl.classList.add('show'); errMsg.textContent='请输入账号和密码'; return; }
+
+  if (!u || !p) {
+    errEl.classList.add('show');
+    errMsg.textContent = '请输入账号和密码';
+    return;
+  }
+
   const user = USERS[u];
-  if (!user || user.password !== p) { errEl.classList.add('show'); errMsg.textContent='账号或密码错误'; return; }
+  if (!user || user.password !== p) {
+    errEl.classList.add('show');
+    errMsg.textContent = '账号或密码错误，请重试';
+    return;
+  }
+
   errEl.classList.remove('show');
-  localStorage.setItem('resourceCenter_user', JSON.stringify({ username:u, name:user.name, role:user.role }));
+  localStorage.setItem('resourceCenter_user', JSON.stringify({
+    username: u,
+    name: user.name,
+    role: user.role
+  }));
+
   showToast('success', '登录成功，正在跳转...');
-  setTimeout(() => { window.location.href = 'index.html'; }, 800);
+  setTimeout(function() {
+    window.location.href = 'index.html';
+  }, 800);
 }
 
 function quickLogin(u, p) {
@@ -186,20 +656,33 @@ function quickLogin(u, p) {
 function togglePwd() {
   const inp = document.getElementById('password');
   const icon = document.querySelector('.toggle-pwd i');
-  if (inp.type === 'password') { inp.type = 'text'; icon.className = 'fas fa-eye-slash'; }
-  else { inp.type = 'password'; icon.className = 'fas fa-eye'; }
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    icon.className = 'fas fa-eye-slash';
+  } else {
+    inp.type = 'password';
+    icon.className = 'fas fa-eye';
+  }
 }
 
 function showToast(type, msg) {
   const box = document.getElementById('toastBox');
+  const icons = { success: 'fas fa-check-circle', error: 'fas fa-times-circle', info: 'fas fa-info-circle' };
   const t = document.createElement('div');
   t.className = 'toast ' + type;
-  t.innerHTML = '<i class="fas fa-' + (type==='success'?'check-circle':'info-circle') + '"></i><span>' + msg + '</span>';
+  t.innerHTML = '<i class="' + (icons[type] || icons.info) + '"></i><span>' + msg + '</span>';
   box.appendChild(t);
-  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(20px)'; setTimeout(() => t.remove(), 300); }, 2500);
+  setTimeout(function() {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(30px)';
+    setTimeout(function() { t.remove(); }, 300);
+  }, 2500);
 }
 
-document.getElementById('password').addEventListener('keydown', e => { if(e.key==='Enter') handleLogin(); });
+// 回车登录
+document.getElementById('password').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleLogin();
+});
 
 // 自动登录检测
 (function() {
